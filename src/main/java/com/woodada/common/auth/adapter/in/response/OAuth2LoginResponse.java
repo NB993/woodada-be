@@ -1,6 +1,6 @@
 package com.woodada.common.auth.adapter.in.response;
 
-public record AccessTokenResponse(
+public record OAuth2LoginResponse(
     String accessToken
 ) {
 }
