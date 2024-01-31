@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component;
 public class JwtHandler {
 
     public String createToken(final String email, long tokenExpirationPeriod) {
-        return null;
+        return "token value";
     }
 }
