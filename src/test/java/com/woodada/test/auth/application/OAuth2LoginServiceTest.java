@@ -1,8 +1,9 @@
-package com.woodada.common.auth.application.service;
+package com.woodada.test.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.woodada.common.auth.application.port.in.OAuth2LoginUseCase;
+import com.woodada.common.auth.application.service.OAuth2LoginService;
 import com.woodada.common.auth.domain.JwtHandler;
 import com.woodada.common.auth.domain.ProviderType;
 import com.woodada.common.auth.domain.Token;
