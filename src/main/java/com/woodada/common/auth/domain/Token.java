@@ -1,7 +1,7 @@
 package com.woodada.common.auth.domain;
 
 import java.time.Duration;
-import java.util.Objects;
+import org.springframework.util.ObjectUtils;
 
 public record Token(
     String accessToken,
@@ -9,8 +9,12 @@ public record Token(
 ) {
 
     public Token {
-        Objects.requireNonNull(accessToken);
-        Objects.requireNonNull(refreshToken);
+        if (ObjectUtils.isEmpty(accessToken)) {
+            throw new IllegalArgumentException("access token 이 입력되지 않았습니다.");
+        }
+        if (ObjectUtils.isEmpty(refreshToken)) {
+            throw new IllegalArgumentException("refresh token 이 입력되지 않았습니다.");
+        }
     }
 
     public static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
