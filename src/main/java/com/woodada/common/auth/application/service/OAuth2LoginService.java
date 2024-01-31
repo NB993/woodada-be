@@ -11,6 +11,6 @@ public class OAuth2LoginService implements OAuth2LoginUseCase {
     @Override
     public Token login(final ProviderType providerType, final String code) {
 
-        return null;
+        return new Token("access_token", "refresh_token");
     }
 }
