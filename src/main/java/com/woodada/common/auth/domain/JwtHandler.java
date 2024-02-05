@@ -5,21 +5,32 @@ import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
+import javax.crypto.SecretKey;
 import org.springframework.stereotype.Component;
 
 @Component
 public class JwtHandler {
 
-    public String createToken(final String email, final long expiration, final Instant issueDate) {
+    private final JwtProperties jwtProperties;
+
+    public JwtHandler(final JwtProperties jwtProperties) {
+        this.jwtProperties = jwtProperties;
+    }
+
+    public String createToken(final Long memberId, final long expiration, final Instant issueDate) {
         return Jwts.builder()
             .header()
-            .type("JWT")
+            .type(jwtProperties.type())
             .and()
-            .issuer("issuer")
-            .claim("email", email)
+            .issuer(jwtProperties.issuer())
+            .claim(jwtProperties.memberIdentifier(), memberId)
             .issuedAt(Date.from(issueDate))
             .expiration(Date.from(issueDate.plusSeconds(expiration)))
-            .signWith(Keys.hmacShaKeyFor("K".repeat(32).getBytes(StandardCharsets.UTF_8)))
+            .signWith(createSecretKey())
             .compact();
+    }
+
+    private SecretKey createSecretKey() {
+        return Keys.hmacShaKeyFor(jwtProperties.secretKey().getBytes(StandardCharsets.UTF_8));
     }
 }
