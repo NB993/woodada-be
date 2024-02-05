@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/v1/oauth2/callback")
+@RequestMapping("/api/v1/login")
 public class OAuth2LoginController {
 
     private final OAuth2LoginUseCase oAuth2LoginUseCase;
