@@ -19,19 +19,16 @@ public class OAuth2LoginController {
 
     private final OAuth2LoginUseCase oAuth2LoginUseCase;
 
-    public OAuth2LoginController(OAuth2LoginUseCase oAuth2LoginUseCase) {
+    public OAuth2LoginController(final OAuth2LoginUseCase oAuth2LoginUseCase) {
         this.oAuth2LoginUseCase = oAuth2LoginUseCase;
     }
 
     @GetMapping("/{providerType}")
-    public ResponseEntity<OAuth2LoginResponse> callBack(
-        @PathVariable("providerType") String providerType,
-        @RequestParam("code") String code
-    ) {
-        //todo 인증, 토큰발급 개발
-        final Token token = oAuth2LoginUseCase.login(ProviderType.valueOf(providerType), code);
-        final ResponseCookie refreshTokenCookie = ResponseCookie.from("refresh_token", token.refreshToken())
-            .maxAge(1800)
+    public ResponseEntity<OAuth2LoginResponse> login(@PathVariable("providerType") String providerType, @RequestParam("code") String code) {
+        final Token token = oAuth2LoginUseCase.login(ProviderType.valueOf(providerType.toUpperCase()), code);
+
+        final ResponseCookie refreshTokenCookie = ResponseCookie.from(Token.REFRESH_TOKEN_COOKIE_NAME, token.refreshToken())
+            .maxAge(3600)
             .httpOnly(true)
             .path("/")
             .build();
