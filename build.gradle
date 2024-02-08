@@ -58,3 +58,12 @@ tasks.named('bootBuildImage') {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+processResources.dependsOn('copyResources')
+
+task copyResources(type: Copy) {
+	copy {
+		from './resources'
+		into './src/main/resources'
+	}
+}
