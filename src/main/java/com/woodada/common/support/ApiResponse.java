@@ -13,7 +13,7 @@ public class ApiResponse<T> {
     private final T data;
     private final ErrorResponse error;
 
-    private static final ApiResponse<Void> OK = new ApiResponse<>(ResultCode.SUCCESS, null, null);
+    public static final ApiResponse<Void> OK = new ApiResponse<>(ResultCode.SUCCESS, null, null);
 
     private ApiResponse(
         final ResultCode result,
