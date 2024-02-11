@@ -1,6 +1,5 @@
 package com.woodada.common.exception;
 
-import com.woodada.common.support.ResultCode;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 @Getter
 public class ErrorResponse {
 
-    private final ResultCode result = ResultCode.ERROR;
     private final String code;
     private final String message;
     private List<FieldError<?>> validations = new ArrayList<>();
