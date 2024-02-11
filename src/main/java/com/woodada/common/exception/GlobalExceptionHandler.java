@@ -1,5 +1,6 @@
 package com.woodada.common.exception;
 
+import com.woodada.common.support.ApiResponse;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,8 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(IllegalArgumentException.class)
-    public ErrorResponse handleIllegalArgumentException(final IllegalArgumentException e) {
-        return ErrorResponse.badRequest(e);
+    public ApiResponse<ErrorResponse> handleIllegalArgumentException(final IllegalArgumentException e) {
+        return ApiResponse.error(ErrorResponse.badRequest(e));
     }
 
     /**
@@ -26,8 +27,8 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ErrorResponse handleHttpRequestMethodNotSupportedException(final HttpRequestMethodNotSupportedException e) {
-        return ErrorResponse.methodNotAllowed(e);
+    public ApiResponse<ErrorResponse> handleHttpRequestMethodNotSupportedException(final HttpRequestMethodNotSupportedException e) {
+        return ApiResponse.error(ErrorResponse.methodNotAllowed(e));
     }
 
     /**
@@ -35,8 +36,8 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ErrorResponse handleHttpMessageNotReadableException(final HttpMessageNotReadableException e) {
-        return ErrorResponse.badRequest(e);
+    public ApiResponse<ErrorResponse> handleHttpMessageNotReadableException(final HttpMessageNotReadableException e) {
+        return ApiResponse.error(ErrorResponse.badRequest(e));
     }
 
     /**
@@ -44,8 +45,8 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
-        return ErrorResponse.badRequest(e);
+    public ApiResponse<ErrorResponse> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+        return ApiResponse.error(ErrorResponse.badRequest(e));
     }
 
     /**
@@ -53,18 +54,16 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
-    public ErrorResponse handleConstraintViolationException(final ConstraintViolationException e) {
-
-        return ErrorResponse.badRequest(e);
+    public ApiResponse<ErrorResponse> handleConstraintViolationException(final ConstraintViolationException e) {
+        return ApiResponse.error(ErrorResponse.badRequest(e));
     }
 
     /**
      * 비즈니스 예외
      */
     @ExceptionHandler(WddException.class)
-    public ResponseEntity<ErrorResponse> handleWddException(final WddException e) {
-        final ErrorResponse response = ErrorResponse.businessError(e);
-
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleWddException(final WddException e) {
+        final ApiResponse<ErrorResponse> response = ApiResponse.error(ErrorResponse.businessError(e));
         return ResponseEntity.status(e.getStatus())
             .body(response);
     }
