@@ -1,6 +1,7 @@
 package com.woodada.common.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woodada.common.exception.ErrorResponse;
 import java.util.List;
@@ -29,6 +30,16 @@ class ApiResponseTest {
         assertThat(successWithData.getResult()).isEqualTo(ResultCode.SUCCESS);
         assertThat(successWithData.getData()).isEqualTo(data);
         assertThat(successWithData.getError()).isNull();
+    }
+
+    @DisplayName("success(T data)에 ErrorResponse는 입력 불가")
+    @Test
+    void can_not_pass_an_error_response_to_success() {
+        final ErrorResponse error = ErrorResponse.badRequest(new IllegalArgumentException("예외"));
+
+        assertThatThrownBy(() -> ApiResponse.success(error))
+            .isInstanceOf(AssertionError.class)
+            .hasMessage("ErrorResponse는 입력할 수 없습니다.");
     }
 
     @DisplayName("예외 응답 테스트")
