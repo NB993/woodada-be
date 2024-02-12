@@ -5,6 +5,7 @@ import com.woodada.common.auth.application.port.out.MemberQueryPort;
 import com.woodada.common.auth.application.port.out.MemberRegisterPort;
 import com.woodada.common.auth.application.port.out.OAuth2AccessTokenRequestPort;
 import com.woodada.common.auth.application.port.out.OAuth2UserInfoRequestPort;
+import com.woodada.common.auth.application.port.out.RefreshTokenSavePort;
 import com.woodada.common.auth.domain.JwtHandler;
 import com.woodada.common.auth.domain.Member;
 import com.woodada.common.auth.domain.OAuth2AccessToken;
@@ -23,6 +24,7 @@ public class OAuth2LoginService implements OAuth2LoginUseCase {
     private final OAuth2UserInfoRequestPort userInfoRequestPort;
     private final MemberQueryPort memberQueryPort;
     private final MemberRegisterPort memberRegisterPort;
+    private final RefreshTokenSavePort refreshTokenSavePort;
     private final JwtHandler jwtHandler;
 
     public OAuth2LoginService(
@@ -30,12 +32,14 @@ public class OAuth2LoginService implements OAuth2LoginUseCase {
         final OAuth2UserInfoRequestPort userInfoRequestPort,
         final MemberQueryPort memberQueryPort,
         final MemberRegisterPort memberRegisterPort,
+        final RefreshTokenSavePort refreshTokenSavePort,
         final JwtHandler jwtHandler
     ) {
         this.accessTokenRequestPort = accessTokenRequestPort;
         this.userInfoRequestPort = userInfoRequestPort;
         this.memberQueryPort = memberQueryPort;
         this.memberRegisterPort = memberRegisterPort;
+        this.refreshTokenSavePort = refreshTokenSavePort;
         this.jwtHandler = jwtHandler;
     }
 
@@ -64,9 +68,11 @@ public class OAuth2LoginService implements OAuth2LoginUseCase {
     }
 
     private Token createTokenOf(final Member member) {
-        return new Token(
-            jwtHandler.createToken(member.getId(), Token.ACCESS_TOKEN_EXPIRATION_PERIOD, Instant.now()),
-            jwtHandler.createToken(member.getId(), Token.REFRESH_TOKEN_EXPIRATION_PERIOD, Instant.now())
-        );
+        final String accessToken = jwtHandler.createToken(member.getId(), Token.ACCESS_TOKEN_EXPIRATION_PERIOD, Instant.now());
+        final String refreshToken = jwtHandler.createToken(member.getId(), Token.REFRESH_TOKEN_EXPIRATION_PERIOD, Instant.now());
+
+        refreshTokenSavePort.save(member.getId(), refreshToken);
+
+        return new Token(accessToken, refreshToken);
     }
 }
