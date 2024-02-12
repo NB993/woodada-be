@@ -1,5 +1,6 @@
-package com.woodada.common.exception;
+package com.woodada.test.common.exception;
 
+import com.woodada.common.exception.BaseExceptionType;
 import org.springframework.http.HttpStatus;
 
 enum TestException implements BaseExceptionType {
