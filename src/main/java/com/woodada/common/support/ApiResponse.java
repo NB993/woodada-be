@@ -26,6 +26,8 @@ public class ApiResponse<T> {
     }
 
     public static <T> ApiResponse<T> success(final T data) {
+        assert !(data instanceof ErrorResponse): "ErrorResponse는 입력할 수 없습니다.";
+
         return new ApiResponse<>(ResultCode.SUCCESS, data, null);
     }
 
