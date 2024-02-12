@@ -30,6 +30,10 @@ dependencies {
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
 
+	// Redis
+	implementation ("org.springframework.boot:spring-boot-starter-data-redis")
+	implementation(group: "it.ozimov", name: "embedded-redis", version: "0.7.2")
+
 	// OpenFeign
 	implementation platform("org.springframework.cloud:spring-cloud-dependencies:2022.0.4")
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'

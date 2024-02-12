@@ -1,4 +1,4 @@
-package com.woodada.common.exception;
+package com.woodada.test.common.exception;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -9,7 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woodada.common.exception.ExceptionTestController.TestRequestBody;
+import com.woodada.test.common.exception.ExceptionTestController.TestRequestBody;
+import com.woodada.common.exception.WddException;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

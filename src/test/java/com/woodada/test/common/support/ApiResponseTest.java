@@ -1,9 +1,11 @@
-package com.woodada.common.support;
+package com.woodada.test.common.support;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woodada.common.exception.ErrorResponse;
+import com.woodada.common.support.ApiResponse;
+import com.woodada.common.support.ResultCode;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
