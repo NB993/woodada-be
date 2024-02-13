@@ -7,10 +7,12 @@ import com.woodada.common.auth.domain.JwtHandler;
 import com.woodada.common.auth.domain.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -19,7 +21,12 @@ import org.junit.jupiter.params.provider.MethodSource;
 @DisplayName("[unittest] JwtHandler 단위테스트")
 public class JwtHandlerTest {
 
-    private JwtHandler jwtHandler = new JwtHandler(new JwtProperties("JWT", "woodada-authn", "memberId", "K".repeat(32)));
+    private JwtHandler jwtHandler;
+
+    @BeforeEach
+    void setUp() {
+        jwtHandler = new JwtHandler(new JwtProperties("JWT", "woodada-authn", "memberId", "K".repeat(32)));
+    }
 
     @DisplayName("유효하지 않은 멤버 ID를 전달받으면 예외가 발생한다.")
     @MethodSource("invalidMemberId")
@@ -78,6 +85,18 @@ public class JwtHandlerTest {
 
         assertThatThrownBy(() -> jwtHandler.decode(expiredToken))
             .isInstanceOf(ExpiredJwtException.class);
+    }
+
+    @DisplayName("토큰 서명시 사용된 secret key와 decode시 사용된 secret key가 서로 다르면 예외가 발생한다.")
+    @Test
+    void when_trying_decode_with_invalid_secret_key_then_throw_exception() {
+        final JwtHandler handlerWithSecretKeyK = new JwtHandler(new JwtProperties("JWT", "woodada-authn", "memberId", "K".repeat(32)));
+        final JwtHandler handlerWithSecretKeyS = new JwtHandler(new JwtProperties("JWT", "woodada-authn", "memberId", "S".repeat(32)));
+
+        final String tokenSignedWithK = handlerWithSecretKeyK.createToken(1L, 10000, Instant.now());
+
+        assertThatThrownBy(() -> handlerWithSecretKeyS.decode(tokenSignedWithK))
+            .isInstanceOf(SignatureException.class);
     }
 
     @DisplayName("decode 성공 시 memberId claim을 꺼낼 수 있다.")
