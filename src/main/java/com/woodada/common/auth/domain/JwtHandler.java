@@ -1,11 +1,13 @@
 package com.woodada.common.auth.domain;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
 import javax.crypto.SecretKey;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,6 +20,11 @@ public class JwtHandler {
     }
 
     public String createToken(final Long memberId, final long expiration, final Instant issueDate) {
+        // todo 유효하지 않은 인자에 대한 예외 처리? 유효하지 않은 인자가 넘어오기 전 단계에서 예외를 발생시켜야?
+        if (ObjectUtils.isEmpty(memberId) || memberId < 1) {
+            throw new RuntimeException("음");
+        }
+
         return Jwts.builder()
             .header()
             .type(jwtProperties.type())
@@ -28,6 +35,19 @@ public class JwtHandler {
             .expiration(Date.from(issueDate.plusSeconds(expiration)))
             .signWith(createSecretKey())
             .compact();
+    }
+
+    public Claims decode(final String token) {
+        return Jwts.parser()
+            .setSigningKey(createSecretKey())
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
+    }
+
+    public Long extractMemberId(final String token) {
+        final Claims claims = decode(token);
+        return claims.get(jwtProperties.memberIdentifier(), Long.class);
     }
 
     private SecretKey createSecretKey() {
