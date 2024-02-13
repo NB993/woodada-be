@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.woodada.common.auth.domain.JwtHandler;
 import com.woodada.common.auth.domain.JwtProperties;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -68,6 +69,15 @@ public class JwtHandlerTest {
         String tokenTwo = jwtHandler.createToken(1L, 0, issuedAtTwo);
 
         assertThat(tokenOne).isNotEqualTo(tokenTwo);
+    }
+
+    @DisplayName("기간이 만료된 토큰을 decode시 예외가 발생한다.")
+    @Test
+    void when_token_expired_then_throw_exception() {
+        final String expiredToken = jwtHandler.createToken(1L, 0, Instant.now());
+
+        assertThatThrownBy(() -> jwtHandler.decode(expiredToken))
+            .isInstanceOf(ExpiredJwtException.class);
     }
 
     @DisplayName("decode 성공 시 memberId claim을 꺼낼 수 있다.")
