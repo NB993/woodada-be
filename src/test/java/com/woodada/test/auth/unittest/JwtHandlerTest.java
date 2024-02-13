@@ -1,4 +1,4 @@
-//package com.woodada.test.auth.domain;
+//package com.woodada.test.auth.unittest;
 //
 //import static org.assertj.core.api.Assertions.assertThat;
 //
