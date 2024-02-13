@@ -1,5 +1,6 @@
 package com.woodada.common.auth.domain;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
@@ -34,6 +35,14 @@ public class JwtHandler {
             .expiration(Date.from(issueDate.plusSeconds(expiration)))
             .signWith(createSecretKey())
             .compact();
+    }
+
+    public Claims decode(final String token) {
+        return Jwts.parser()
+            .setSigningKey(createSecretKey())
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
     }
 
     private SecretKey createSecretKey() {
