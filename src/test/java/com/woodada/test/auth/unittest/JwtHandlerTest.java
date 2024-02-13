@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woodada.common.auth.domain.JwtHandler;
 import com.woodada.common.auth.domain.JwtProperties;
+import io.jsonwebtoken.Claims;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -67,5 +68,15 @@ public class JwtHandlerTest {
         String tokenTwo = jwtHandler.createToken(1L, 0, issuedAtTwo);
 
         assertThat(tokenOne).isNotEqualTo(tokenTwo);
+    }
+
+    @DisplayName("decode 성공 시 memberId claim을 꺼낼 수 있다.")
+    @Test
+    void decode_test() {
+        final String token = jwtHandler.createToken(1L, 1000, Instant.now());
+        final Claims claims = jwtHandler.decode(token);
+        final Long memberId = claims.get("memberId", Long.class);
+
+        assertThat(memberId).isEqualTo(1L);
     }
 }
