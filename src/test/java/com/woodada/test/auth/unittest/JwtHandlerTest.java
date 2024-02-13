@@ -73,10 +73,23 @@ public class JwtHandlerTest {
     @DisplayName("decode 성공 시 memberId claim을 꺼낼 수 있다.")
     @Test
     void decode_test() {
-        final String token = jwtHandler.createToken(1L, 1000, Instant.now());
+        final String token = createTokenString();
         final Claims claims = jwtHandler.decode(token);
         final Long memberId = claims.get("memberId", Long.class);
 
         assertThat(memberId).isEqualTo(1L);
+    }
+
+    @DisplayName("token String을 전달하여 바로 memberId를 리턴받을 수 있다.")
+    @Test
+    void extract_member_id_test() {
+        final String token = createTokenString();
+        final Long memberId = jwtHandler.extractMemberId(token);
+
+        assertThat(memberId).isEqualTo(1L);
+    }
+
+    private String createTokenString() {
+        return jwtHandler.createToken(1L, 1000, Instant.now());
     }
 }

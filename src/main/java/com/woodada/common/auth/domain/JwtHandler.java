@@ -45,6 +45,11 @@ public class JwtHandler {
             .getBody();
     }
 
+    public Long extractMemberId(final String token) {
+        final Claims claims = decode(token);
+        return claims.get(jwtProperties.memberIdentifier(), Long.class);
+    }
+
     private SecretKey createSecretKey() {
         return Keys.hmacShaKeyFor(jwtProperties.secretKey().getBytes(StandardCharsets.UTF_8));
     }
