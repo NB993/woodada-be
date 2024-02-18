@@ -1,8 +1,10 @@
 package com.woodada.common.config;
 
+import com.woodada.common.auth.argument_resolver.WddMemberResolver;
 import com.woodada.common.auth.interceptor.AuthInterceptor;
 import java.util.List;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -14,10 +16,16 @@ public class WebConfig implements WebMvcConfigurer {
 
     private final CorsProperties corsProperties;
     private final AuthInterceptor authInterceptor;
+    private final WddMemberResolver wddMemberResolver;
 
-    public WebConfig(final CorsProperties corsProperties, final AuthInterceptor authInterceptor) {
+    public WebConfig(
+        final CorsProperties corsProperties,
+        final AuthInterceptor authInterceptor,
+        final WddMemberResolver wddMemberResolver
+    ) {
         this.corsProperties = corsProperties;
         this.authInterceptor = authInterceptor;
+        this.wddMemberResolver = wddMemberResolver;
     }
 
     @Override
@@ -36,5 +44,10 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
             .addPathPatterns("/**");
+    }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(wddMemberResolver);
     }
 }
