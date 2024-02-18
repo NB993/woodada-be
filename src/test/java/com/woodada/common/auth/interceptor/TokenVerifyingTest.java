@@ -54,7 +54,7 @@ class TokenVerifyingTest {
             .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(AuthenticationException.class))
             .andExpect(jsonPath("result").value("ERROR"))
             .andExpect(jsonPath("error.code").value("401"))
-            .andExpect(jsonPath("error.message").value("유효하지 않은 토큰"))
+            .andExpect(jsonPath("error.message").value("인증 실패"))
             .andExpect(jsonPath("error.validations").isEmpty())
             .andDo(print());
     }
