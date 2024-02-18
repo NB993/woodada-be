@@ -13,12 +13,10 @@ import com.woodada.common.auth.domain.Deleted;
 import com.woodada.common.auth.domain.JwtHandler;
 import com.woodada.common.auth.domain.JwtProperties;
 import com.woodada.common.auth.domain.Member;
-import com.woodada.common.auth.domain.Token;
 import com.woodada.common.auth.domain.UserRole;
 import com.woodada.common.auth.exception.AuthenticationException;
 import com.woodada.common.auth.helper.AuthTestController;
 import com.woodada.common.config.CorsProperties;
-import jakarta.servlet.http.Cookie;
 import java.time.Instant;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -53,8 +51,8 @@ class TokenVerifyingTest {
 
         //then
         perform
-            .andExpect(status().isUnauthorized())
             .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(AuthenticationException.class))
+            .andExpect(status().isUnauthorized())
             .andExpect(jsonPath("result").value("ERROR"))
             .andExpect(jsonPath("error.code").value("401"))
             .andExpect(jsonPath("error.message").value("인증 실패"))
@@ -67,15 +65,10 @@ class TokenVerifyingTest {
     void when_token_expired_then_verify_refresh_token() throws Exception {
         //given
         String expiredToken = jwtHandler.createToken(1L, 0, Instant.now());
-        String refreshToken = jwtHandler.createToken(1L, Token.REFRESH_TOKEN_EXPIRATION_PERIOD, Instant.now());
-
-        Cookie refreshTokenCookie = new Cookie(Token.REFRESH_TOKEN_COOKIE_NAME, refreshToken);
-        refreshTokenCookie.setHttpOnly(true);
 
         //when
         ResultActions perform = mockMvc.perform(get("/api/auth")
-            .header(HttpHeaders.AUTHORIZATION, "Bearer " + expiredToken)
-            .cookie(refreshTokenCookie));
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + expiredToken));
 
         //then
         perform
