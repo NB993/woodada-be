@@ -89,8 +89,8 @@ public class ErrorResponse {
      * 인증 실패
      */
     public static ErrorResponse authenticationError(final AuthenticationException e) {
-        final Class<? extends Throwable> cause = e.getCause().getClass();
-        if (ExpiredJwtException.class.equals(cause)) {
+        final Throwable cause = e.getCause();
+        if (cause != null && ExpiredJwtException.class.equals(cause.getClass())) {
             return new ErrorResponse("401", "REISSUE_TOKEN");
         }
 
