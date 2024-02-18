@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 
 public enum AuthException implements BaseExceptionType {
 
+    NOT_FOUND_MEMBER("401", "존재하지 않는 멤버.", HttpStatus.UNAUTHORIZED),
     INVALID_TOKEN_TYPE("401", "사용자 인증 실패.", HttpStatus.UNAUTHORIZED);
 
     private final String code;
