@@ -1,5 +1,7 @@
 package com.woodada.common.auth.domain;
 
+import com.woodada.common.auth.exception.AuthenticationException;
+import com.woodada.common.exception.WddException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JwtHandler {
+
+    private final int TOKEN_INDEX = 1;
 
     private final JwtProperties jwtProperties;
 
@@ -37,7 +41,8 @@ public class JwtHandler {
             .compact();
     }
 
-    public Claims decode(final String token) {
+    public Claims decode(final String authHeader) {
+        final String token = extractToken(authHeader);
         return Jwts.parser()
             .setSigningKey(createSecretKey())
             .build()
@@ -45,12 +50,26 @@ public class JwtHandler {
             .getBody();
     }
 
-    public Long extractMemberId(final String token) {
-        final Claims claims = decode(token);
+    public Long extractMemberId(final String authHeader) {
+        final String token = extractToken(authHeader);
+
+        final Claims claims = Jwts.parser()
+            .setSigningKey(createSecretKey())
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
+
         return claims.get(jwtProperties.memberIdentifier(), Long.class);
     }
 
     private SecretKey createSecretKey() {
         return Keys.hmacShaKeyFor(jwtProperties.secretKey().getBytes(StandardCharsets.UTF_8));
+    }
+
+    private String extractToken(final String authHeader) {
+        if (authHeader.contains(jwtProperties.authScheme())) {
+            return authHeader.split(jwtProperties.authScheme())[TOKEN_INDEX];
+        }
+        throw new AuthenticationException("invalid auth header scheme");
     }
 }

@@ -13,6 +13,7 @@ import com.woodada.common.auth.domain.OAuth2UserInfo;
 import com.woodada.common.auth.domain.ProviderType;
 import com.woodada.common.auth.domain.Token;
 import com.woodada.common.auth.domain.UserRole;
+import jakarta.transaction.Transactional;
 import java.time.Instant;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
@@ -43,6 +44,8 @@ public class OAuth2LoginService implements OAuth2LoginUseCase {
         this.jwtHandler = jwtHandler;
     }
 
+    @Override
+    @Transactional
     public Token login(final ProviderType providerType, final String authCode) {
         final OAuth2AccessToken oAuth2AccessToken = accessTokenRequestPort.requestOAuth2AccessToken(providerType, authCode);
         final OAuth2UserInfo userInfo = userInfoRequestPort.requestOAuth2UserInfo(providerType, oAuth2AccessToken);

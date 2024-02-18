@@ -1,4 +1,4 @@
-package com.woodada.common.annotation;
+package com.woodada.test_helper.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;

@@ -24,7 +24,7 @@ public class MemberPersistenceAdapter implements MemberQueryPort, MemberRegister
         }
 
         final MemberJpaEntity foundMember = optionalMember.get();
-        return Optional.of(foundMember.toDomainEntity());
+        return Optional.ofNullable(foundMember.toDomainEntity());
     }
 
     @Override

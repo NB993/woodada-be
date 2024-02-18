@@ -1,10 +1,9 @@
-package com.woodada.test.auth.unittest;
+package com.woodada.common.auth.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.*;
 
-import com.woodada.common.auth.domain.JwtHandler;
-import com.woodada.common.auth.domain.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -19,7 +18,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 @DisplayName("[unittest] JwtHandler 단위테스트")
-public class JwtHandlerTest {
+class JwtHandlerTest {
 
     private JwtHandler jwtHandler;
 

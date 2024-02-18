@@ -1,4 +1,4 @@
-package com.woodada.common;
+package com.woodada.test_helper;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.Entity;

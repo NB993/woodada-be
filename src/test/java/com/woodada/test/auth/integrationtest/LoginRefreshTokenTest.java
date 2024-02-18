@@ -2,10 +2,10 @@ package com.woodada.test.auth.integrationtest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woodada.common.IntegrationTestBase;
 import com.woodada.common.auth.application.port.in.OAuth2LoginUseCase;
 import com.woodada.common.auth.domain.ProviderType;
 import com.woodada.common.auth.domain.Token;
+import com.woodada.test_helper.IntegrationTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

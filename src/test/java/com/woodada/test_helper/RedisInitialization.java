@@ -1,4 +1,4 @@
-package com.woodada.common;
+package com.woodada.test_helper;
 
 import java.util.Set;
 import org.springframework.data.redis.core.RedisTemplate;
