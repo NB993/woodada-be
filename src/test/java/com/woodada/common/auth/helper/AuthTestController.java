@@ -1,4 +1,4 @@
-package com.woodada.common.auth.interceptor.helper;
+package com.woodada.common.auth.helper;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;

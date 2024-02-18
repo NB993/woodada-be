@@ -8,9 +8,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.woodada.common.auth.adapter.out.persistence.MemberRepository;
 import com.woodada.common.auth.domain.JwtHandler;
 import com.woodada.common.auth.domain.JwtProperties;
-import com.woodada.common.auth.interceptor.helper.AuthTestController;
+import com.woodada.common.auth.domain.Token;
+import com.woodada.common.auth.exception.AuthenticationException;
+import com.woodada.common.auth.helper.AuthTestController;
 import com.woodada.common.config.CorsProperties;
 import com.woodada.common.exception.WddException;
+import jakarta.servlet.http.Cookie;
 import java.time.Instant;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,6 +55,31 @@ class TokenVerifyingTest {
             .andDo(print());
     }
 
+    @DisplayName("토큰의 유효기간이 만료된 경우 AuthenticationException 예외가 발생한다.")
+    @Test
+    void when_token_expired_then_verify_refresh_token() throws Exception {
+        //given
+        String expiredToken = jwtHandler.createToken(1L, 0, Instant.now());
+        String refreshToken = jwtHandler.createToken(1L, Token.REFRESH_TOKEN_EXPIRATION_PERIOD, Instant.now());
+
+        Cookie refreshTokenCookie = new Cookie(Token.REFRESH_TOKEN_COOKIE_NAME, refreshToken);
+        refreshTokenCookie.setHttpOnly(true);
+
+        //when
+        ResultActions perform = mockMvc.perform(get("/api/auth")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + expiredToken)
+            .cookie(refreshTokenCookie));
+
+        //then
+        perform
+            .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(AuthenticationException.class))
+            .andExpect(jsonPath("result").value("ERROR"))
+            .andExpect(jsonPath("error.code").value("401"))
+            .andExpect(jsonPath("error.message").value("REISSUE_TOKEN"))
+            .andExpect(jsonPath("error.validations").isEmpty())
+            .andDo(print());
+    }
+    
     private String getValidToken() {
         return jwtHandler.createToken(1L, 10000, Instant.now());
     }
