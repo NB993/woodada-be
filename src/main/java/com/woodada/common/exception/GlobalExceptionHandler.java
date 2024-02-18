@@ -1,5 +1,6 @@
 package com.woodada.common.exception;
 
+import com.woodada.common.auth.exception.AuthenticationException;
 import com.woodada.common.support.ApiResponse;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +57,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ApiResponse<Void> handleConstraintViolationException(final ConstraintViolationException e) {
         return ApiResponse.error(ErrorResponse.badRequest(e));
+    }
+
+    /**
+     * 인증 실패 예외
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(AuthenticationException.class)
+    public ApiResponse<Void> handleAuthenticationException(final AuthenticationException e) {
+        log.error("[GlobalExceptionHandler][handleAuthenticationException] AuthenticationException 발생", e);
+        return ApiResponse.error(ErrorResponse.authenticationError(e));
     }
 
     /**

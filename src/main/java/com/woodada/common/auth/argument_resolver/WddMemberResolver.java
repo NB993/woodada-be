@@ -3,8 +3,7 @@ package com.woodada.common.auth.argument_resolver;
 import com.woodada.common.auth.adapter.out.persistence.MemberJpaEntity;
 import com.woodada.common.auth.adapter.out.persistence.MemberRepository;
 import com.woodada.common.auth.domain.Deleted;
-import com.woodada.common.auth.exception.AuthException;
-import com.woodada.common.exception.WddException;
+import com.woodada.common.auth.exception.AuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +40,7 @@ public class WddMemberResolver implements HandlerMethodArgumentResolver {
         final Optional<MemberJpaEntity> optionalMember = memberRepository.findByIdAndDeleted(memberId, Deleted.FALSE);
         if (optionalMember.isEmpty()) {
             log.error("[WddMemberResolver][resolveArgument] memberId = [{}]", memberId);
-            throw new WddException(AuthException.NOT_FOUND_MEMBER);
+            throw new AuthenticationException("유저 조회 실패");
         }
 
         final MemberJpaEntity authMember = optionalMember.get();

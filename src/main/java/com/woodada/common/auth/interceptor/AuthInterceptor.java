@@ -1,6 +1,7 @@
 package com.woodada.common.auth.interceptor;
 
 import com.woodada.common.auth.domain.JwtHandler;
+import com.woodada.common.auth.exception.AuthenticationException;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,14 +21,14 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)  {
         final String authHeader = getAuthHeader(request);
 
         try {
             final Long memberId = jwtHandler.extractMemberId(authHeader);
             request.setAttribute("memberId", memberId);
         } catch (ExpiredJwtException e) {
-            //todo 리프레시 토큰으로 검증 후 유효하면 엑세스 토큰만 재발급 or AUTH_ERROR
+            throw new AuthenticationException(e);
         }
 
         return true;

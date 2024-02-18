@@ -1,6 +1,6 @@
 package com.woodada.common.auth.domain;
 
-import com.woodada.common.auth.exception.AuthException;
+import com.woodada.common.auth.exception.AuthenticationException;
 import com.woodada.common.exception.WddException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -70,6 +70,6 @@ public class JwtHandler {
         if (authHeader.contains(jwtProperties.authScheme())) {
             return authHeader.split(jwtProperties.authScheme())[TOKEN_INDEX];
         }
-        throw new WddException(AuthException.INVALID_TOKEN_TYPE);
+        throw new AuthenticationException("invalid auth header scheme");
     }
 }
