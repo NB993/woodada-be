@@ -7,11 +7,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.woodada.common.auth.adapter.out.persistence.MemberJpaEntity;
 import com.woodada.common.auth.adapter.out.persistence.MemberRepository;
 import com.woodada.common.auth.domain.Deleted;
 import com.woodada.common.auth.domain.JwtHandler;
 import com.woodada.common.auth.domain.JwtProperties;
+import com.woodada.common.auth.domain.Member;
 import com.woodada.common.auth.domain.Token;
+import com.woodada.common.auth.domain.UserRole;
 import com.woodada.common.auth.exception.AuthenticationException;
 import com.woodada.common.auth.helper.AuthTestController;
 import com.woodada.common.config.CorsProperties;
@@ -108,9 +111,34 @@ class TokenVerifyingTest {
             .andExpect(jsonPath("error.validations").isEmpty())
             .andDo(print());
     }
-    
+
+    @DisplayName("유효한 토큰을 전달받으면 인증을 마치고 요청이 핸들러로 전달된다.")
+    @Test
+    void when_get_valid_token_then_ok() throws Exception {
+        //given
+        String validToken = getValidToken();
+
+        MemberJpaEntity member = getMemberJpaEntity(1L);
+        when(memberRepository.findByIdAndDeleted(1L, Deleted.FALSE))
+            .thenReturn(Optional.of(member));
+
+        //when
+        ResultActions perform = mockMvc.perform(get("/api/auth")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + validToken));
+
+        //then
+        perform
+            .andExpect(status().isOk())
+            .andDo(print());
+    }
+
     private String getValidToken() {
         return jwtHandler.createToken(1L, 10000, Instant.now());
+    }
+
+    private MemberJpaEntity getMemberJpaEntity(final Long memberId) {
+        Member member = Member.withId(1L, "test@email.com", "테스트유저", "/profile.png", UserRole.NORMAL, Deleted.FALSE);
+        return MemberJpaEntity.of(member);
     }
 
 }
