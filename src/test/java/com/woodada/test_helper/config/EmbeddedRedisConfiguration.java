@@ -1,4 +1,4 @@
-package com.woodada.common.config;
+package com.woodada.test_helper.config;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
