@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.woodada.common.auth.adapter.out.persistence.MemberRepository;
 import com.woodada.common.auth.domain.Deleted;
@@ -14,7 +15,6 @@ import com.woodada.common.auth.domain.Token;
 import com.woodada.common.auth.exception.AuthenticationException;
 import com.woodada.common.auth.helper.AuthTestController;
 import com.woodada.common.config.CorsProperties;
-import com.woodada.common.exception.WddException;
 import jakarta.servlet.http.Cookie;
 import java.time.Instant;
 import java.util.Optional;
@@ -50,7 +50,8 @@ class TokenVerifyingTest {
 
         //then
         perform
-            .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(WddException.class))
+            .andExpect(status().isUnauthorized())
+            .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(AuthenticationException.class))
             .andExpect(jsonPath("result").value("ERROR"))
             .andExpect(jsonPath("error.code").value("401"))
             .andExpect(jsonPath("error.message").value("유효하지 않은 토큰"))
@@ -76,6 +77,7 @@ class TokenVerifyingTest {
         //then
         perform
             .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(AuthenticationException.class))
+            .andExpect(status().isUnauthorized())
             .andExpect(jsonPath("result").value("ERROR"))
             .andExpect(jsonPath("error.code").value("401"))
             .andExpect(jsonPath("error.message").value("REISSUE_TOKEN"))
@@ -99,6 +101,7 @@ class TokenVerifyingTest {
         //then
         perform
             .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(AuthenticationException.class))
+            .andExpect(status().isUnauthorized())
             .andExpect(jsonPath("result").value("ERROR"))
             .andExpect(jsonPath("error.code").value("401"))
             .andExpect(jsonPath("error.message").value("인증 실패"))

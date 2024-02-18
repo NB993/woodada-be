@@ -62,7 +62,7 @@ public class GlobalExceptionHandler {
     /**
      * 인증 실패 예외
      */
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(AuthenticationException.class)
     public ApiResponse<Void> handleAuthenticationException(final AuthenticationException e) {
         log.error("[GlobalExceptionHandler][handleAuthenticationException] AuthenticationException 발생", e);
