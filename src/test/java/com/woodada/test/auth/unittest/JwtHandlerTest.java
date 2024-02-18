@@ -25,7 +25,8 @@ public class JwtHandlerTest {
 
     @BeforeEach
     void setUp() {
-        jwtHandler = new JwtHandler(new JwtProperties("JWT", "woodada-authn", "memberId", "K".repeat(32)));
+        jwtHandler = new JwtHandler(new JwtProperties(
+            "JWT", "woodada-authn", "memberId", "K".repeat(32), "Bearer "));
     }
 
     @DisplayName("유효하지 않은 멤버 ID를 전달받으면 예외가 발생한다.")
@@ -90,8 +91,8 @@ public class JwtHandlerTest {
     @DisplayName("토큰 서명시 사용된 secret key와 decode시 사용된 secret key가 서로 다르면 예외가 발생한다.")
     @Test
     void when_trying_decode_with_invalid_secret_key_then_throw_exception() {
-        final JwtHandler handlerWithSecretKeyK = new JwtHandler(new JwtProperties("JWT", "woodada-authn", "memberId", "K".repeat(32)));
-        final JwtHandler handlerWithSecretKeyS = new JwtHandler(new JwtProperties("JWT", "woodada-authn", "memberId", "S".repeat(32)));
+        final JwtHandler handlerWithSecretKeyK = new JwtHandler(new JwtProperties("JWT", "woodada-authn", "memberId", "K".repeat(32), "Bearer "));
+        final JwtHandler handlerWithSecretKeyS = new JwtHandler(new JwtProperties("JWT", "woodada-authn", "memberId", "S".repeat(32), "Bearer "));
 
         final String tokenSignedWithK = handlerWithSecretKeyK.createToken(1L, 10000, Instant.now());
 
