@@ -1,11 +1,13 @@
 package com.woodada.common.auth.interceptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import com.woodada.common.auth.adapter.out.persistence.MemberRepository;
+import com.woodada.common.auth.domain.Deleted;
 import com.woodada.common.auth.domain.JwtHandler;
 import com.woodada.common.auth.domain.JwtProperties;
 import com.woodada.common.auth.domain.Token;
@@ -15,6 +17,7 @@ import com.woodada.common.config.CorsProperties;
 import com.woodada.common.exception.WddException;
 import jakarta.servlet.http.Cookie;
 import java.time.Instant;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +79,29 @@ class TokenVerifyingTest {
             .andExpect(jsonPath("result").value("ERROR"))
             .andExpect(jsonPath("error.code").value("401"))
             .andExpect(jsonPath("error.message").value("REISSUE_TOKEN"))
+            .andExpect(jsonPath("error.validations").isEmpty())
+            .andDo(print());
+    }
+
+    @DisplayName("토큰에서 꺼낸 memberId로 멤버 조회 실패 시 AuthenticationException 예외가 발생한다.")
+    @Test
+    void when_not_found_member_then_throw_exception() throws Exception {
+        //given
+        String notFoundMemberIdToken = jwtHandler.createToken(9999L, 100000, Instant.now());
+
+        when(memberRepository.findByIdAndDeleted(9999L, Deleted.FALSE))
+            .thenReturn(Optional.empty());
+
+        //when
+        ResultActions perform = mockMvc.perform(get("/api/auth")
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + notFoundMemberIdToken));
+
+        //then
+        perform
+            .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(AuthenticationException.class))
+            .andExpect(jsonPath("result").value("ERROR"))
+            .andExpect(jsonPath("error.code").value("401"))
+            .andExpect(jsonPath("error.message").value("인증 실패"))
             .andExpect(jsonPath("error.validations").isEmpty())
             .andDo(print());
     }
