@@ -1,9 +1,9 @@
-package com.woodada.core.member.in;
+package com.woodada.core.member.adapter.in;
 
 import com.woodada.common.auth.argument_resolver.WddMember;
 import com.woodada.common.auth.domain.UserRole;
 import com.woodada.common.support.ApiResponse;
-import com.woodada.core.member.in.response.MeResponse;
+import com.woodada.core.member.adapter.in.response.MeResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

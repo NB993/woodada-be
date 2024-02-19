@@ -1,4 +1,4 @@
-package com.woodada.core.member.in;
+package com.woodada.core.member.adapter.in;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,7 +6,7 @@ import com.woodada.common.auth.argument_resolver.WddMember;
 import com.woodada.common.auth.argument_resolver.WddMemberHelper;
 import com.woodada.common.support.ApiResponse;
 import com.woodada.common.support.ResultCode;
-import com.woodada.core.member.in.response.MeResponse;
+import com.woodada.core.member.adapter.in.response.MeResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +21,8 @@ class MemberAdapterTest {
 
     @BeforeEach
     void setUp() {
-        memberAdapter = new MemberAdapter();
+        memberAdapter = new MemberAdapter(
+        );
     }
 
     @DisplayName("getMe() 테스트")

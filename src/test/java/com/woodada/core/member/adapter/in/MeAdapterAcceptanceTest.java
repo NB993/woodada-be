@@ -1,4 +1,4 @@
-package com.woodada.core.member.in;
+package com.woodada.core.member.adapter.in;
 
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;

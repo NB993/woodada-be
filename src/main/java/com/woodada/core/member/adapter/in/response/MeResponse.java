@@ -1,4 +1,4 @@
-package com.woodada.core.member.in.response;
+package com.woodada.core.member.adapter.in.response;
 
 import com.woodada.common.auth.domain.UserRole;
 
