@@ -47,7 +47,9 @@ public class WddMemberResolver implements HandlerMethodArgumentResolver {
         return new WddMember(
             authMember.getId(),
             authMember.getEmail(),
-            authMember.getName()
+            authMember.getName(),
+            authMember.getProfileUrl(),
+            authMember.getRole()
         );
     }
 }
