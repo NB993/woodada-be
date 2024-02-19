@@ -40,8 +40,8 @@ class MemberAdapterTest {
     @Test
     void when_get_wdd_member_then_return_me_response() {
         //given
-        final WddMember wddMember = MemberHelper.createWddMember(1L, "test@email.com", "테스트유저");
-        final Member member = MemberHelper.createMember(wddMember.getId(), wddMember.getEmail(), wddMember.getName(), "test_profile_url", UserRole.NORMAL, Deleted.FALSE);
+        final WddMember wddMember = getWddMember();
+        final Member member = getMember(wddMember);
 
         when(getMeUseCase.getMe(wddMember))
             .thenReturn(new WddMe(member.getId(), member.getEmail(), member.getName(), member.getProfileUrl(), member.getRole()));
@@ -61,6 +61,27 @@ class MemberAdapterTest {
             () -> assertThat(data.name()).isEqualTo("테스트유저"),
             () -> assertThat(data.profileUrl()).isEqualTo("test_profile_url"),
             () -> assertThat(data.userRole()).isEqualTo(UserRole.NORMAL)
+        );
+    }
+
+    private static WddMember getWddMember() {
+        return MemberHelper.createWddMember(
+            1L,
+            "test@email.com",
+            "테스트유저",
+            "test_profile_url",
+            UserRole.NORMAL
+        );
+    }
+
+    private static Member getMember(WddMember wddMember) {
+        return MemberHelper.createMember(
+            wddMember.getId(),
+            wddMember.getEmail(),
+            wddMember.getName(),
+            wddMember.getProfileUrl(),
+            wddMember.getRole(),
+            Deleted.FALSE
         );
     }
 }

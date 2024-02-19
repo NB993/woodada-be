@@ -12,9 +12,11 @@ public class MemberHelper {
     public static WddMember createWddMember(
         final Long id,
         final String email,
-        final String name
+        final String name,
+        final String profileUrl,
+        final UserRole role
     ) {
-        return new WddMember(id, email, name);
+        return new WddMember(id, email, name, profileUrl, role);
     }
 
     public static Member createMember(
