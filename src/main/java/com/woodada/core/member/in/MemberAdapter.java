@@ -15,7 +15,7 @@ public class MemberAdapter {
 
     @GetMapping("/me")
     ResponseEntity<ApiResponse<MeResponse>> getMe(final WddMember wddMember) {
-        MeResponse meResponse = new MeResponse(1L, "email", "name", "profile_url", UserRole.NORMAL);
+        MeResponse meResponse = new MeResponse(wddMember.getId(), wddMember.getEmail(), wddMember.getName(), "profile_url", UserRole.NORMAL);
 
         final ApiResponse<MeResponse> response = ApiResponse.success(meResponse);
         return ResponseEntity.ok()
