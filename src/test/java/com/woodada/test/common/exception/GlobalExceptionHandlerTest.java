@@ -9,13 +9,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.woodada.test.common.exception.ExceptionTestController.TestRequestBody;
+import com.woodada.common.auth.adapter.out.persistence.MemberRepository;
+import com.woodada.common.auth.domain.JwtHandler;
+import com.woodada.common.auth.domain.JwtProperties;
+import com.woodada.common.config.CorsProperties;
 import com.woodada.common.exception.WddException;
+import com.woodada.test.common.exception.ExceptionTestController.TestRequestBody;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.test.context.ActiveProfiles;
@@ -25,16 +30,15 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 //todo TestController에 목 객체 주입해서 예외 발생 메서드를 stubbing하는 방법도 고려.
-@DisplayName("[WebMvcTest] GlobalExceptionHandler 테스트")
+@DisplayName("[unit test] GlobalExceptionHandler 단위 테스트")
 @ActiveProfiles("test")
-@WebMvcTest(ExceptionTestController.class)
+@WebMvcTest(value = {ExceptionTestController.class, JwtHandler.class, JwtProperties.class, CorsProperties.class})
 public class GlobalExceptionHandlerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Autowired private MockMvc mockMvc;
+    @Autowired private ObjectMapper objectMapper;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    @MockBean private MemberRepository memberRepository;
 
     @DisplayName("IllegalArgumentException 핸들러 테스트")
     @Test
