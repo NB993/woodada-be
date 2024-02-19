@@ -7,9 +7,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import com.woodada.common.auth.adapter.out.persistence.MemberJpaEntity;
 import com.woodada.common.auth.adapter.out.persistence.MemberRepository;
+import com.woodada.common.auth.argument_resolver.MemberHelper;
 import com.woodada.common.auth.domain.Deleted;
 import com.woodada.common.auth.domain.JwtHandler;
-import com.woodada.common.auth.domain.Member;
 import com.woodada.common.auth.domain.UserRole;
 import com.woodada.test_helper.AcceptanceTestBase;
 import io.restassured.http.ContentType;
@@ -33,8 +33,8 @@ public class MeAdapterAcceptanceTest extends AcceptanceTestBase {
 
     @BeforeEach
     void setUp() {
-        Member domainMember = Member.withId(1L, "email", "name", "profile_url", UserRole.NORMAL, Deleted.FALSE);
-        MemberJpaEntity member = MemberJpaEntity.of(domainMember);
+        final MemberJpaEntity member = MemberHelper.createMemberJpaEntity(1L, "email", "name",
+            "profile_url", UserRole.NORMAL, Deleted.FALSE);
         memberRepository.save(member);
     }
 

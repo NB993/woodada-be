@@ -9,10 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.woodada.common.auth.adapter.out.persistence.MemberJpaEntity;
 import com.woodada.common.auth.adapter.out.persistence.MemberRepository;
+import com.woodada.common.auth.argument_resolver.MemberHelper;
 import com.woodada.common.auth.domain.Deleted;
 import com.woodada.common.auth.domain.JwtHandler;
 import com.woodada.common.auth.domain.JwtProperties;
-import com.woodada.common.auth.domain.Member;
 import com.woodada.common.auth.domain.UserRole;
 import com.woodada.common.auth.exception.AuthenticationException;
 import com.woodada.common.auth.helper.AuthTestController;
@@ -130,8 +130,6 @@ class TokenVerifyingTest {
     }
 
     private MemberJpaEntity getMemberJpaEntity(final Long memberId) {
-        Member member = Member.withId(1L, "test@email.com", "테스트유저", "/profile.png", UserRole.NORMAL, Deleted.FALSE);
-        return MemberJpaEntity.of(member);
+        return MemberHelper.createMemberJpaEntity(memberId, "test@email.com", "테스트유저", "/profile.png", UserRole.NORMAL, Deleted.FALSE);
     }
-
 }
