@@ -15,15 +15,18 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     private final CorsProperties corsProperties;
+    private final InterceptorProperties interceptorProperties;
     private final AuthInterceptor authInterceptor;
     private final WddMemberResolver wddMemberResolver;
 
     public WebConfig(
         final CorsProperties corsProperties,
+        final InterceptorProperties interceptorProperties,
         final AuthInterceptor authInterceptor,
         final WddMemberResolver wddMemberResolver
     ) {
         this.corsProperties = corsProperties;
+        this.interceptorProperties = interceptorProperties;
         this.authInterceptor = authInterceptor;
         this.wddMemberResolver = wddMemberResolver;
     }
@@ -43,7 +46,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
-            .addPathPatterns("/api/**");
+            .addPathPatterns(interceptorProperties.getAuthAddPatterns())
+            .excludePathPatterns(interceptorProperties.getAuthExcludePatterns());
     }
 
     @Override
