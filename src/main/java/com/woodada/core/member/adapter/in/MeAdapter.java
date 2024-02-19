@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/v1/member")
 @RestController
-public class MemberAdapter {
+public class MeAdapter {
 
     @GetMapping("/me")
     ResponseEntity<ApiResponse<MeResponse>> getMe(final WddMember wddMember) {

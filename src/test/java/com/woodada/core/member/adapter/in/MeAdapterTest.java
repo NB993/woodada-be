@@ -16,13 +16,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 @DisplayName("[unit test] MemberAdapter 단위 테스트")
-class MemberAdapterTest {
+class MeAdapterTest {
 
-    private MemberAdapter memberAdapter;
+    private MeAdapter meAdapter;
 
     @BeforeEach
     void setUp() {
-        memberAdapter = new MemberAdapter();
+        meAdapter = new MeAdapter();
     }
 
     @DisplayName("getMe 핸들러에 WddMember를 전달받으면 MeResponse를 리턴한다.")
@@ -32,7 +32,7 @@ class MemberAdapterTest {
         final WddMember wddMember = getWddMember();
 
         //when
-            ResponseEntity<ApiResponse<MeResponse>> responseEntity = memberAdapter.getMe(wddMember);
+        ResponseEntity<ApiResponse<MeResponse>> responseEntity = meAdapter.getMe(wddMember);
 
         //then
         final ApiResponse<MeResponse> body = responseEntity.getBody();
