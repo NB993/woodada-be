@@ -6,7 +6,6 @@ import com.woodada.common.auth.argument_resolver.MemberHelper;
 import com.woodada.common.auth.argument_resolver.WddMember;
 import com.woodada.common.auth.domain.UserRole;
 import com.woodada.common.support.ApiResponse;
-import com.woodada.common.support.ResultCode;
 import com.woodada.core.member.adapter.in.response.MeResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +39,7 @@ class MeAdapterTest {
 
         Assertions.assertAll(
             () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK),
-            () -> assertThat(body.getResult()).isEqualTo(ResultCode.SUCCESS),
+            () -> assertThat(body.isSuccess()).isTrue(),
             () -> assertThat(data.id()).isEqualTo(1L),
             () -> assertThat(data.email()).isEqualTo("test@email.com"),
             () -> assertThat(data.name()).isEqualTo("테스트유저"),
