@@ -9,18 +9,18 @@ import lombok.Getter;
 @JsonInclude(Include.NON_NULL)
 public class ApiResponse<T> {
 
-    private final ResultCode result;
+    private final boolean success;
     private final T data;
     private final ErrorResponse error;
 
-    public static final ApiResponse<Void> OK = new ApiResponse<>(ResultCode.SUCCESS, null, null);
+    public static final ApiResponse<Void> OK = new ApiResponse<>(true, null, null);
 
     private ApiResponse(
-        final ResultCode result,
+        final boolean success,
         final T data,
         final ErrorResponse error
     ) {
-        this.result = result;
+        this.success = success;
         this.data = data;
         this.error = error;
     }
@@ -28,10 +28,10 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> success(final T data) {
         assert !(data instanceof ErrorResponse): "ErrorResponse는 입력할 수 없습니다.";
 
-        return new ApiResponse<>(ResultCode.SUCCESS, data, null);
+        return new ApiResponse<>(true, data, null);
     }
 
     public static <T> ApiResponse<T> error(final ErrorResponse error) {
-        return new ApiResponse<>(ResultCode.ERROR, null, error);
+        return new ApiResponse<>(false, null, error);
     }
 }

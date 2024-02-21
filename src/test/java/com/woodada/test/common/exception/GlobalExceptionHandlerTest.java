@@ -50,7 +50,7 @@ public class GlobalExceptionHandlerTest {
         perform
             .andExpect(status().isBadRequest())
             .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(IllegalArgumentException.class))
-            .andExpect(jsonPath("result").value("ERROR"))
+            .andExpect(jsonPath("status").value(false))
             .andExpect(jsonPath("error.code").value("400"))
             .andExpect(jsonPath("error.message").exists())
             .andExpect(jsonPath("error.validations").isEmpty())
@@ -68,7 +68,7 @@ public class GlobalExceptionHandlerTest {
         perform
             .andExpect(status().isMethodNotAllowed())
             .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(HttpRequestMethodNotSupportedException.class))
-            .andExpect(jsonPath("result").value("ERROR"))
+            .andExpect(jsonPath("status").value(false))
             .andExpect(jsonPath("error.code").value("405"))
             .andExpect(jsonPath("error.validations").isEmpty())
             .andDo(print());
@@ -86,7 +86,7 @@ public class GlobalExceptionHandlerTest {
         perform
             .andExpect(status().isBadRequest())
             .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(HttpMessageNotReadableException.class))
-            .andExpect(jsonPath("result").value("ERROR"))
+            .andExpect(jsonPath("status").value(false))
             .andExpect(jsonPath("error.code").value("400"))
             .andExpect(jsonPath("error.message").exists())
             .andExpect(jsonPath("error.validations").isEmpty())
@@ -108,7 +108,7 @@ public class GlobalExceptionHandlerTest {
         perform
             .andExpect(status().isBadRequest())
             .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(MethodArgumentNotValidException.class))
-            .andExpect(jsonPath("result").value("ERROR"))
+            .andExpect(jsonPath("status").value(false))
             .andExpect(jsonPath("error.code").value("400"))
             .andExpect(jsonPath("error.message").value("입력 조건을 위반하였습니다."))
             .andExpect(jsonPath("error.validations").exists())
@@ -125,7 +125,7 @@ public class GlobalExceptionHandlerTest {
         perform
             .andExpect(status().isNotAcceptable())
             .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(WddException.class))
-            .andExpect(jsonPath("result").value("ERROR"))
+            .andExpect(jsonPath("status").value(false))
             .andExpect(jsonPath("error.code").value(TestException.TEST.getCode()))
             .andExpect(jsonPath("error.message").value(TestException.TEST.getMessage()))
             .andExpect(jsonPath("error.validations").isEmpty())
@@ -142,7 +142,7 @@ public class GlobalExceptionHandlerTest {
         perform
             .andExpect(status().isInternalServerError())
             .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(Exception.class))
-            .andExpect(jsonPath("result").value("ERROR"))
+            .andExpect(jsonPath("status").value(false))
             .andExpect(jsonPath("error.code").value("500"))
             .andExpect(jsonPath("error.message").value("서버 에러"))
             .andExpect(jsonPath("error.validations").isEmpty())
