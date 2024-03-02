@@ -51,7 +51,7 @@ public class MeAdapterAcceptanceTest extends AcceptanceTestBase {
                 .get("/api/v1/member/me")
             .then()
                 .statusCode(200)
-                .body("result", equalTo("SUCCESS"))
+                .body("success", equalTo(true))
                 .body("data.id", equalTo(1))
                 .body("data.email", equalTo("email"))
                 .body("data.name", equalTo("name"))
@@ -80,7 +80,7 @@ public class MeAdapterAcceptanceTest extends AcceptanceTestBase {
         final JsonPath result = response.jsonPath();
         assertAll(
             () -> assertThat(response.statusCode()).isEqualTo(200),
-            () -> assertThat(result.getString("result")).isEqualTo("SUCCESS"),
+            () -> assertThat(result.getBoolean("success")).isTrue(),
             () -> assertThat(result.getLong("data.id")).isEqualTo(1L),
             () -> assertThat(result.getString("data.email")).isEqualTo("email"),
             () -> assertThat(result.getString("data.name")).isEqualTo("name"),

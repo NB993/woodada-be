@@ -13,6 +13,7 @@ import com.woodada.common.auth.adapter.out.persistence.MemberRepository;
 import com.woodada.common.auth.domain.JwtHandler;
 import com.woodada.common.auth.domain.JwtProperties;
 import com.woodada.common.config.CorsProperties;
+import com.woodada.common.config.InterceptorProperties;
 import com.woodada.common.exception.WddException;
 import com.woodada.test.common.exception.ExceptionTestController.TestRequestBody;
 import java.util.List;
@@ -32,7 +33,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 //todo TestController에 목 객체 주입해서 예외 발생 메서드를 stubbing하는 방법도 고려.
 @DisplayName("[unit test] GlobalExceptionHandler 단위 테스트")
 @ActiveProfiles("test")
-@WebMvcTest(value = {ExceptionTestController.class, JwtHandler.class, JwtProperties.class, CorsProperties.class})
+@WebMvcTest(value = {ExceptionTestController.class, JwtHandler.class, JwtProperties.class, CorsProperties.class, InterceptorProperties.class})
 public class GlobalExceptionHandlerTest {
 
     @Autowired private MockMvc mockMvc;
@@ -50,7 +51,7 @@ public class GlobalExceptionHandlerTest {
         perform
             .andExpect(status().isBadRequest())
             .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(IllegalArgumentException.class))
-            .andExpect(jsonPath("status").value(false))
+            .andExpect(jsonPath("success").value(false))
             .andExpect(jsonPath("error.code").value("400"))
             .andExpect(jsonPath("error.message").exists())
             .andExpect(jsonPath("error.validations").isEmpty())
@@ -68,7 +69,7 @@ public class GlobalExceptionHandlerTest {
         perform
             .andExpect(status().isMethodNotAllowed())
             .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(HttpRequestMethodNotSupportedException.class))
-            .andExpect(jsonPath("status").value(false))
+            .andExpect(jsonPath("success").value(false))
             .andExpect(jsonPath("error.code").value("405"))
             .andExpect(jsonPath("error.validations").isEmpty())
             .andDo(print());
@@ -86,7 +87,7 @@ public class GlobalExceptionHandlerTest {
         perform
             .andExpect(status().isBadRequest())
             .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(HttpMessageNotReadableException.class))
-            .andExpect(jsonPath("status").value(false))
+            .andExpect(jsonPath("success").value(false))
             .andExpect(jsonPath("error.code").value("400"))
             .andExpect(jsonPath("error.message").exists())
             .andExpect(jsonPath("error.validations").isEmpty())
@@ -108,7 +109,7 @@ public class GlobalExceptionHandlerTest {
         perform
             .andExpect(status().isBadRequest())
             .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(MethodArgumentNotValidException.class))
-            .andExpect(jsonPath("status").value(false))
+            .andExpect(jsonPath("success").value(false))
             .andExpect(jsonPath("error.code").value("400"))
             .andExpect(jsonPath("error.message").value("입력 조건을 위반하였습니다."))
             .andExpect(jsonPath("error.validations").exists())
@@ -125,7 +126,7 @@ public class GlobalExceptionHandlerTest {
         perform
             .andExpect(status().isNotAcceptable())
             .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(WddException.class))
-            .andExpect(jsonPath("status").value(false))
+            .andExpect(jsonPath("success").value(false))
             .andExpect(jsonPath("error.code").value(TestException.TEST.getCode()))
             .andExpect(jsonPath("error.message").value(TestException.TEST.getMessage()))
             .andExpect(jsonPath("error.validations").isEmpty())
@@ -142,7 +143,7 @@ public class GlobalExceptionHandlerTest {
         perform
             .andExpect(status().isInternalServerError())
             .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(Exception.class))
-            .andExpect(jsonPath("status").value(false))
+            .andExpect(jsonPath("success").value(false))
             .andExpect(jsonPath("error.code").value("500"))
             .andExpect(jsonPath("error.message").value("서버 에러"))
             .andExpect(jsonPath("error.validations").isEmpty())
