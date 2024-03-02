@@ -2,7 +2,6 @@ package com.woodada.common.auth.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -82,8 +81,9 @@ class JwtHandlerTest {
     @Test
     void when_token_expired_then_throw_exception() {
         final String expiredToken = jwtHandler.createToken(1L, 0, Instant.now());
+        final String authHeader = "Bearer " + expiredToken;
 
-        assertThatThrownBy(() -> jwtHandler.decode(expiredToken))
+        assertThatThrownBy(() -> jwtHandler.decode(authHeader))
             .isInstanceOf(ExpiredJwtException.class);
     }
 
@@ -94,8 +94,9 @@ class JwtHandlerTest {
         final JwtHandler handlerWithSecretKeyS = new JwtHandler(new JwtProperties("JWT", "woodada-authn", "memberId", "S".repeat(32), "Bearer "));
 
         final String tokenSignedWithK = handlerWithSecretKeyK.createToken(1L, 10000, Instant.now());
+        final String authHeader = "Bearer " + tokenSignedWithK;
 
-        assertThatThrownBy(() -> handlerWithSecretKeyS.decode(tokenSignedWithK))
+        assertThatThrownBy(() -> handlerWithSecretKeyS.decode(authHeader))
             .isInstanceOf(SignatureException.class);
     }
 
@@ -103,7 +104,8 @@ class JwtHandlerTest {
     @Test
     void decode_test() {
         final String token = createTokenString();
-        final Claims claims = jwtHandler.decode(token);
+        final String authHeader = "Bearer " + token;
+        final Claims claims = jwtHandler.decode(authHeader);
         final Long memberId = claims.get("memberId", Long.class);
 
         assertThat(memberId).isEqualTo(1L);
@@ -113,7 +115,8 @@ class JwtHandlerTest {
     @Test
     void extract_member_id_test() {
         final String token = createTokenString();
-        final Long memberId = jwtHandler.extractMemberId(token);
+        final String authHeader = "Bearer " + token;
+        final Long memberId = jwtHandler.extractMemberId(authHeader);
 
         assertThat(memberId).isEqualTo(1L);
     }
