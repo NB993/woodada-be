@@ -17,6 +17,7 @@ import com.woodada.common.auth.domain.UserRole;
 import com.woodada.common.auth.exception.AuthenticationException;
 import com.woodada.common.auth.helper.AuthTestController;
 import com.woodada.common.config.CorsProperties;
+import com.woodada.common.config.InterceptorProperties;
 import java.time.Instant;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +32,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 @DisplayName("[integration test] AuthInterceptor, WddMemberResolver 토큰 검증 통합 테스트")
 @ActiveProfiles("test")
-@WebMvcTest(value = {AuthTestController.class, AuthInterceptor.class, JwtHandler.class, JwtProperties.class, CorsProperties.class})
+@WebMvcTest(value = {AuthTestController.class, AuthInterceptor.class, JwtHandler.class, JwtProperties.class, CorsProperties.class, InterceptorProperties.class})
 class TokenVerifyingTest {
 
     @Autowired private MockMvc mockMvc;
@@ -53,7 +54,7 @@ class TokenVerifyingTest {
         perform
             .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(AuthenticationException.class))
             .andExpect(status().isUnauthorized())
-            .andExpect(jsonPath("result").value("ERROR"))
+            .andExpect(jsonPath("success").value(false))
             .andExpect(jsonPath("error.code").value("401"))
             .andExpect(jsonPath("error.message").value("인증 실패"))
             .andExpect(jsonPath("error.validations").isEmpty())
@@ -74,7 +75,7 @@ class TokenVerifyingTest {
         perform
             .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(AuthenticationException.class))
             .andExpect(status().isUnauthorized())
-            .andExpect(jsonPath("result").value("ERROR"))
+            .andExpect(jsonPath("success").value(false))
             .andExpect(jsonPath("error.code").value("401"))
             .andExpect(jsonPath("error.message").value("REISSUE_TOKEN"))
             .andExpect(jsonPath("error.validations").isEmpty())
@@ -98,7 +99,7 @@ class TokenVerifyingTest {
         perform
             .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(AuthenticationException.class))
             .andExpect(status().isUnauthorized())
-            .andExpect(jsonPath("result").value("ERROR"))
+            .andExpect(jsonPath("success").value(false))
             .andExpect(jsonPath("error.code").value("401"))
             .andExpect(jsonPath("error.message").value("인증 실패"))
             .andExpect(jsonPath("error.validations").isEmpty())
