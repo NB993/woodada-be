@@ -116,7 +116,7 @@ class JwtHandlerTest {
     void extract_member_id_test() {
         final String token = createTokenString();
         final String authHeader = "Bearer " + token;
-        final Long memberId = jwtHandler.extractMemberId(authHeader);
+        final Long memberId = jwtHandler.decodeTokenWithHeader(authHeader);
 
         assertThat(memberId).isEqualTo(1L);
     }

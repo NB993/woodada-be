@@ -1,7 +1,6 @@
 package com.woodada.common.auth.domain;
 
 import com.woodada.common.auth.exception.AuthenticationException;
-import com.woodada.common.exception.WddException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -50,16 +49,13 @@ public class JwtHandler {
             .getBody();
     }
 
-    public Long extractMemberId(final String authHeader) {
+    public Long decodeTokenWithHeader(final String authHeader) {
         final String token = extractToken(authHeader);
+        return extractMemberId(token);
+    }
 
-        final Claims claims = Jwts.parser()
-            .setSigningKey(createSecretKey())
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
-
-        return claims.get(jwtProperties.memberIdentifier(), Long.class);
+    public Long decodeToken(final String refreshToken) {
+        return extractMemberId(refreshToken);
     }
 
     private SecretKey createSecretKey() {
@@ -71,5 +67,15 @@ public class JwtHandler {
             return authHeader.split(jwtProperties.authScheme())[TOKEN_INDEX];
         }
         throw new AuthenticationException("invalid auth header scheme");
+    }
+
+    private Long extractMemberId(final String token) {
+        final Claims claims = Jwts.parser()
+            .setSigningKey(createSecretKey())
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
+
+        return claims.get(jwtProperties.memberIdentifier(), Long.class);
     }
 }

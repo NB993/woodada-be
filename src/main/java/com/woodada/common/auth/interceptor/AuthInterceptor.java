@@ -25,7 +25,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         final String authHeader = getAuthHeader(request);
 
         try {
-            final Long memberId = jwtHandler.extractMemberId(authHeader);
+            final Long memberId = jwtHandler.decodeTokenWithHeader(authHeader);
             request.setAttribute("memberId", memberId);
         } catch (ExpiredJwtException e) {
             throw new AuthenticationException(e);
