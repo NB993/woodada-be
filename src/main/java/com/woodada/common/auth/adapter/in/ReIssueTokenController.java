@@ -6,6 +6,8 @@ import com.woodada.common.auth.application.port.in.ReIssueTokenUseCase;
 import com.woodada.common.auth.argument_resolver.WddMember;
 import com.woodada.common.auth.domain.Token;
 import com.woodada.common.support.ApiResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,8 +26,14 @@ public class ReIssueTokenController {
     @PostMapping
     ResponseEntity<ApiResponse<ReIssueTokenResponse>> reIssueToken(WddMember wddMember) {
         final Token token = reIssueTokenUseCase.reIssue(wddMember.getId());
+        final ResponseCookie refreshTokenCookie = ResponseCookie.from(Token.REFRESH_TOKEN_COOKIE_NAME, token.refreshToken())
+            .maxAge(3600)
+            .httpOnly(true)
+            .path("/")
+            .build();
 
         return ResponseEntity.ok()
+            .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
             .body(ApiResponse.success(new ReIssueTokenResponse(token.accessToken())));
     }
 }

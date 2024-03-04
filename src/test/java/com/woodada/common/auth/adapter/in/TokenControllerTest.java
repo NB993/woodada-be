@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -50,7 +51,9 @@ class TokenControllerTest {
         Assertions.assertAll(
             () -> assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK),
             () -> assertThat(body.isSuccess()).isTrue(),
-            () -> assertThat(data.accessToken()).isEqualTo("re_issued_access_token")
+            () -> assertThat(data.accessToken()).isEqualTo("re_issued_access_token"),
+            () -> assertThat(responseEntity.getHeaders().get(HttpHeaders.SET_COOKIE))
+                .anyMatch(cookie -> cookie.contains("re_issued_refresh_token"))
         );
     }
 }
