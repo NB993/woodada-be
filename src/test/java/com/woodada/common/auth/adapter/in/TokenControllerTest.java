@@ -9,6 +9,7 @@ import com.woodada.common.auth.argument_resolver.WddMember;
 import com.woodada.common.auth.domain.Token;
 import com.woodada.common.auth.domain.UserRole;
 import com.woodada.common.support.ApiResponse;
+import java.time.Instant;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +39,7 @@ class TokenControllerTest {
     void success() {
         //given
         WddMember wddMember = MemberHelper.createWddMember(1L, "test@email.com", "테스트유저", "test_profile_url", UserRole.NORMAL);
-        Mockito.when(reIssueTokenUseCase.reIssue(1L))
+        Mockito.when(reIssueTokenUseCase.reIssue(1L, Instant.now()))
             .thenReturn(new Token("re_issued_access_token", "re_issued_refresh_token"));
 
         //when
