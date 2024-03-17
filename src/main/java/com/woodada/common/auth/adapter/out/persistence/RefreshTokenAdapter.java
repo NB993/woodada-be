@@ -20,7 +20,7 @@ public class RefreshTokenAdapter implements RefreshTokenSavePort {
         final String key = String.format("member::%d::string::refresh_token", memberId);
 
         try {
-            stringRedisTemplate.opsForSet().add(key, refreshToken);
+            stringRedisTemplate.opsForValue().set(key, refreshToken);
             stringRedisTemplate.expire(key, Duration.ofSeconds(Token.REFRESH_TOKEN_EXPIRATION_PERIOD));
         } catch(Exception e) {
             //todo 레디스 저장 도중 발생 가능한 예외 종류와 그에 대한 처리?
