@@ -38,11 +38,11 @@ class ReIssueAccessTokenAcceptanceTest extends AcceptanceTestBase {
     @DisplayName("유효한 리프레시 토큰을 이용하여 엑세스 토큰과 리프레시 토큰을 함께 재발급 받을 수 있다.")
     @Test
     void testReIssueAccessToken() {
-        final String validRefreshToken = jwtHandler.createToken(1L, Duration.ofMinutes(24 * 60 * 7).toSeconds(), Instant.now());
-        redisTemplate.opsForSet().add("member::1::string::refresh_token", validRefreshToken);
+        final String previousRefreshToken = jwtHandler.createToken(1L, Duration.ofMinutes(24 * 60 * 7).toSeconds(), Instant.now());
+        redisTemplate.opsForValue().set("member::1::string::refresh_token", previousRefreshToken);
 
         given()
-            .cookie("refresh_token", validRefreshToken)
+            .cookie("refresh_token", previousRefreshToken)
         .when()
             .post("/api/v1/token")
         .then()
@@ -53,7 +53,7 @@ class ReIssueAccessTokenAcceptanceTest extends AcceptanceTestBase {
             .cookie("refresh_token", detailedCookie().httpOnly(true))
             .log().all();
 
-        final String reissuedRefreshToken = redisTemplate.opsForSet().pop("member::1::string::refresh_token");
-        assertThat(reissuedRefreshToken).isNotEqualTo(validRefreshToken);
+        final String reIssuedRefreshToken = redisTemplate.opsForValue().get("member::1::string::refresh_token");
+        assertThat(reIssuedRefreshToken).isNotEqualTo(previousRefreshToken);
     }
 }
