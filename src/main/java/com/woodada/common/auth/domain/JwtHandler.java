@@ -50,7 +50,12 @@ public class JwtHandler {
     }
 
     public Long decodeTokenWithHeader(final String authHeader) {
-        final String token = extractToken(authHeader);
+        final String header = Objects.requireNonNullElse(authHeader, "");
+        if (!header.contains(jwtProperties.authScheme())) {
+            throw new AuthenticationException("INVALID_AUTH_HEADER");
+        }
+
+        final String token = header.split(jwtProperties.authScheme())[TOKEN_INDEX];
         return extractMemberId(token);
     }
 
@@ -63,10 +68,7 @@ public class JwtHandler {
     }
 
     private String extractToken(final String authHeader) {
-        if (authHeader.contains(jwtProperties.authScheme())) {
-            return authHeader.split(jwtProperties.authScheme())[TOKEN_INDEX];
-        }
-        throw new AuthenticationException("invalid auth header scheme");
+        return authHeader.split(jwtProperties.authScheme())[TOKEN_INDEX];
     }
 
     private Long extractMemberId(final String token) {
