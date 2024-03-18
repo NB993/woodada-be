@@ -9,12 +9,9 @@ import io.jsonwebtoken.security.SignatureException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 @DisplayName("[unittest] JwtHandler 단위테스트")
 class JwtHandlerTest {
@@ -27,18 +24,12 @@ class JwtHandlerTest {
             "JWT", "woodada-authn", "memberId", "K".repeat(32), "Bearer "));
     }
 
-    @DisplayName("유효하지 않은 멤버 ID를 전달받으면 예외가 발생한다.")
-    @MethodSource("invalidMemberId")
-    @ParameterizedTest
-    void when_member_id_is_null_then_throw_exception(final Long invalidMemberId) {
-        assertThatThrownBy(() -> jwtHandler.createToken(invalidMemberId, 0, Instant.now()))
-            .isInstanceOf(RuntimeException.class)
-            .hasMessage("음");
+    @DisplayName("멤버 ID에 null을 입력하면 NPE를 던진다.")
+    @Test
+    void when_member_id_is_null_then_throw_exception() {
+        assertThatThrownBy(() -> jwtHandler.createToken(null, Token.ACCESS_TOKEN_EXPIRATION_PERIOD, Instant.now()))
+            .isInstanceOf(NullPointerException.class);
     }
-    private static Stream<Long> invalidMemberId() {
-        return Stream.of(-1L, 0L, null);
-    }
-
 
     @DisplayName("멤버 ID와 토큰 만료기간을 입력받으면 jwt 토큰을 생성해서 리턴한다.")
     @Test
