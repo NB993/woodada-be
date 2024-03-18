@@ -7,7 +7,8 @@ public record JwtProperties(
     String type,
     String issuer,
     String memberIdentifier,
-    String secretKey
+    String secretKey,
+    String authScheme
 ) {
 
 }

@@ -2,10 +2,10 @@ package com.woodada.test.auth.integrationtest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.woodada.common.IntegrationTestBase;
 import com.woodada.common.auth.application.port.in.OAuth2LoginUseCase;
 import com.woodada.common.auth.domain.ProviderType;
 import com.woodada.common.auth.domain.Token;
+import com.woodada.test_helper.IntegrationTestBase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class LoginRefreshTokenTest extends IntegrationTestBase {
         final Token token = oAuth2LoginUseCase.login(ProviderType.GOOGLE, "auth_code....");
         final String refreshTokenSaveKey = "member::1::string::refresh_token";
 
-        assertThat(redisTemplate.opsForSet().pop(refreshTokenSaveKey))
+        assertThat(redisTemplate.opsForValue().get(refreshTokenSaveKey))
             .isEqualTo(token.refreshToken());
     }
 }

@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.woodada.common.exception.ErrorResponse;
 import com.woodada.common.support.ApiResponse;
-import com.woodada.common.support.ResultCode;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ class ApiResponseTest {
     void success_response_with_no_data() {
         final ApiResponse<Void> successWithNoData = ApiResponse.OK;
 
-        assertThat(successWithNoData.getResult()).isEqualTo(ResultCode.SUCCESS);
+        assertThat(successWithNoData.isSuccess()).isTrue();
         assertThat(successWithNoData.getData()).isNull();
         assertThat(successWithNoData.getError()).isNull();
     }
@@ -29,7 +28,7 @@ class ApiResponseTest {
         final List<Integer> data = List.of(1, 2, 3);
         final ApiResponse<List<Integer>> successWithData = ApiResponse.success(data);
 
-        assertThat(successWithData.getResult()).isEqualTo(ResultCode.SUCCESS);
+        assertThat(successWithData.isSuccess()).isTrue();
         assertThat(successWithData.getData()).isEqualTo(data);
         assertThat(successWithData.getError()).isNull();
     }
@@ -50,7 +49,7 @@ class ApiResponseTest {
         final ErrorResponse error = ErrorResponse.badRequest(new IllegalArgumentException("예외"));
         final ApiResponse<Void> errorResponse = ApiResponse.error(error);
 
-        assertThat(errorResponse.getResult()).isEqualTo(ResultCode.ERROR);
+        assertThat(errorResponse.isSuccess()).isFalse();
         assertThat(errorResponse.getData()).isNull();
         assertThat(errorResponse.getError()).isEqualTo(error);
     }

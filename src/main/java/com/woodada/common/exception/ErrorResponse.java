@@ -1,5 +1,7 @@
 package com.woodada.common.exception;
 
+import com.woodada.common.auth.exception.AuthenticationException;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import java.util.ArrayList;
@@ -81,6 +83,18 @@ public class ErrorResponse {
      */
     public static ErrorResponse businessError(final WddException e) {
         return new ErrorResponse(String.valueOf(e.getCode()), e.getMessage());
+    }
+
+    /**
+     * 인증 실패
+     */
+    public static ErrorResponse authenticationError(final AuthenticationException e) {
+        final Throwable cause = e.getCause();
+        if (cause != null && ExpiredJwtException.class.equals(cause.getClass())) {
+            return new ErrorResponse("401", "REISSUE_TOKEN");
+        }
+
+        return new ErrorResponse("401", "인증 실패");
     }
 
     /**

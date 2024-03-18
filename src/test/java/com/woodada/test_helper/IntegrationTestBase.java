@@ -1,6 +1,6 @@
-package com.woodada.common;
+package com.woodada.test_helper;
 
-import com.woodada.common.annotation.IntegrationTest;
+import com.woodada.test_helper.annotation.IntegrationTest;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 
