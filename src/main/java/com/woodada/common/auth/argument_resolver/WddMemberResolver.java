@@ -40,7 +40,7 @@ public class WddMemberResolver implements HandlerMethodArgumentResolver {
         final Optional<MemberJpaEntity> optionalMember = memberRepository.findByIdAndDeleted(memberId, Deleted.FALSE);
         if (optionalMember.isEmpty()) {
             log.error("[WddMemberResolver][resolveArgument] memberId = [{}]", memberId);
-            throw new AuthenticationException("유저 조회 실패");
+            throw new AuthenticationException("NOT_FOUND_MEMBER");
         }
 
         final MemberJpaEntity authMember = optionalMember.get();

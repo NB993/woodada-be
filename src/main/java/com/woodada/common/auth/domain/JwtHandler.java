@@ -1,15 +1,14 @@
 package com.woodada.common.auth.domain;
 
 import com.woodada.common.auth.exception.AuthenticationException;
-import com.woodada.common.exception.WddException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Objects;
 import javax.crypto.SecretKey;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,10 +23,9 @@ public class JwtHandler {
     }
 
     public String createToken(final Long memberId, final long expiration, final Instant issueDate) {
-        // todo 유효하지 않은 인자에 대한 예외 처리? 유효하지 않은 인자가 넘어오기 전 단계에서 예외를 발생시켜야?
-        if (ObjectUtils.isEmpty(memberId) || memberId < 1) {
-            throw new RuntimeException("음");
-        }
+        Objects.requireNonNull(memberId);
+        Objects.requireNonNull(expiration);
+        Objects.requireNonNull(issueDate);
 
         return Jwts.builder()
             .header()
@@ -50,16 +48,18 @@ public class JwtHandler {
             .getBody();
     }
 
-    public Long extractMemberId(final String authHeader) {
-        final String token = extractToken(authHeader);
+    public Long decodeTokenWithHeader(final String authHeader) {
+        final String header = Objects.requireNonNullElse(authHeader, "");
+        if (!header.contains(jwtProperties.authScheme())) {
+            throw new AuthenticationException("INVALID_AUTH_HEADER");
+        }
 
-        final Claims claims = Jwts.parser()
-            .setSigningKey(createSecretKey())
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
+        final String token = header.split(jwtProperties.authScheme())[TOKEN_INDEX];
+        return extractMemberId(token);
+    }
 
-        return claims.get(jwtProperties.memberIdentifier(), Long.class);
+    public Long decodeToken(final String refreshToken) {
+        return extractMemberId(refreshToken);
     }
 
     private SecretKey createSecretKey() {
@@ -67,9 +67,16 @@ public class JwtHandler {
     }
 
     private String extractToken(final String authHeader) {
-        if (authHeader.contains(jwtProperties.authScheme())) {
-            return authHeader.split(jwtProperties.authScheme())[TOKEN_INDEX];
-        }
-        throw new AuthenticationException("invalid auth header scheme");
+        return authHeader.split(jwtProperties.authScheme())[TOKEN_INDEX];
+    }
+
+    private Long extractMemberId(final String token) {
+        final Claims claims = Jwts.parser()
+            .setSigningKey(createSecretKey())
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
+
+        return claims.get(jwtProperties.memberIdentifier(), Long.class);
     }
 }

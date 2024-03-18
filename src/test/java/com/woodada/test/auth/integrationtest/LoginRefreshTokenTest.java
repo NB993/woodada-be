@@ -23,7 +23,7 @@ public class LoginRefreshTokenTest extends IntegrationTestBase {
         final Token token = oAuth2LoginUseCase.login(ProviderType.GOOGLE, "auth_code....");
         final String refreshTokenSaveKey = "member::1::string::refresh_token";
 
-        assertThat(redisTemplate.opsForSet().pop(refreshTokenSaveKey))
+        assertThat(redisTemplate.opsForValue().get(refreshTokenSaveKey))
             .isEqualTo(token.refreshToken());
     }
 }
