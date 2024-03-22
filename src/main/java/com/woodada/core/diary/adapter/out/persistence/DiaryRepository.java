@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DiaryRepository extends JpaRepository<DiaryJpaEntity, Long> {
 
-    Optional<DiaryJpaEntity> findByMemberId(Long memberId);
+    Optional<DiaryJpaEntity> findByCreatedBy(Long memberId);
 }

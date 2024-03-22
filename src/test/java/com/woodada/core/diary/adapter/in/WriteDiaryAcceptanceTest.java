@@ -57,7 +57,7 @@ class WriteDiaryAcceptanceTest extends AcceptanceTestBase {
             .body("error", nullValue())
             .log().all();
 
-        DiaryJpaEntity savedDiary = diaryRepository.findByMemberId(1L).get();
+        DiaryJpaEntity savedDiary = diaryRepository.findByCreatedBy(1L).get();
         Assertions.assertThat(savedDiary.getId()).isEqualTo(1L);
         Assertions.assertThat(savedDiary.getContents()).isEqualTo("유효한 일기 본문");
     }
