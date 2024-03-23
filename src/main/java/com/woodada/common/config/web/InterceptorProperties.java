@@ -1,4 +1,4 @@
-package com.woodada.common.config;
+package com.woodada.common.config.web;
 
 import java.util.List;
 import java.util.Map;

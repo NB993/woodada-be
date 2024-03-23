@@ -1,4 +1,4 @@
-package com.woodada.common.config;
+package com.woodada.common.config.web;
 
 import com.woodada.common.auth.argument_resolver.WddMemberResolver;
 import com.woodada.common.auth.interceptor.AuthInterceptor;
