@@ -63,7 +63,7 @@ class DiaryWriteServiceTest {
         DiaryWriteCommand writeDiaryCommand = new DiaryWriteCommand("100자 이하의 제목", "5000자 이하의 본문", dateAlreadyWroteDiary);
 
         given(findDiaryPort.existsDiary(wddMember.getId(), dateAlreadyWroteDiary))
-            .willThrow(WddException.class);
+            .willReturn(true);
 
         //when then
         assertThatThrownBy(() -> writeDiaryService.writeDiary(wddMember, writeDiaryCommand))
