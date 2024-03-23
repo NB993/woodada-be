@@ -2,7 +2,10 @@ package com.woodada.core.diary.adapter.in;
 
 
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.everyItem;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,11 +17,13 @@ import com.woodada.common.auth.domain.JwtHandler;
 import com.woodada.common.auth.domain.Token;
 import com.woodada.common.auth.domain.UserRole;
 import com.woodada.core.diary.adapter.in.request.DiaryWriteRequest;
+import com.woodada.core.diary.adapter.out.persistence.DiaryJpaEntity;
 import com.woodada.core.diary.adapter.out.persistence.DiaryRepository;
 import com.woodada.test_helper.AcceptanceTestBase;
 import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import java.time.Instant;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,9 +61,77 @@ class DiaryWriteAcceptanceTest extends AcceptanceTestBase {
             .body("error", nullValue())
             .log().all();
 
-//        DiaryJpaEntity savedDiary = diaryRepository.findByCreatedBy(1L).get();
-//        Assertions.assertThat(savedDiary.getId()).isEqualTo(1L);
-//        Assertions.assertThat(savedDiary.getContents()).isEqualTo("유효한 일기 본문");
+        List<DiaryJpaEntity> diaries = diaryRepository.findAll();
+
+        assertThat(diaries.size()).isGreaterThan(0);
+        assertThat(diaries.get(0).getTitle()).isEqualTo("유효한 일기 제목");
+        assertThat(diaries.get(0).getContents()).isEqualTo("유효한 일기 본문");
+    }
+
+    @DisplayName("일기 본문이 5000자를 초과하면 저장에 실패한다.")
+    @Test
+    void when_contents_size_over_5000_then_throw_exception() throws JsonProcessingException {
+        saveMember(1L);
+
+        String titleOver100 = String.format("""
+                {
+                    "title": "일기 제목",
+                    "contents": "%s"
+                }
+                """, "T".repeat(5001));
+
+        given()
+            .contentType(ContentType.JSON)
+            .header(getAuthHeader(1L))
+            .body(objectMapper.readValue(titleOver100, DiaryWriteRequest.class))
+
+            .when()
+            .post("/api/v1/diary")
+
+            .then()
+            .statusCode(400)
+            .body("success", equalTo(false))
+            .body("data", nullValue())
+            .body("error.code", equalTo("400"))
+            .body("error.message", equalTo("입력 조건을 위반하였습니다."))
+            .body("error.validations.size()", equalTo(1))
+            .body("error.validations.field", everyItem(is("contents")))
+            .body("error.validations.message", everyItem(is("크기가 1에서 5000 사이여야 합니다")))
+            .body("error.validations.value", everyItem(is("T".repeat(5001))))
+            .log().all();
+    }
+
+    @DisplayName("일기 제목이 100자를 초과하면 저장에 실패한다.")
+    @Test
+    void when_title_size_over_100_then_throw_exception() throws JsonProcessingException {
+        saveMember(1L);
+
+        String titleOver100 = String.format("""
+                {
+                    "title": "%s",
+                    "contents": "일기 본문"
+                }
+                """, "T".repeat(101));
+
+        given()
+            .contentType(ContentType.JSON)
+            .header(getAuthHeader(1L))
+            .body(objectMapper.readValue(titleOver100, DiaryWriteRequest.class))
+
+            .when()
+            .post("/api/v1/diary")
+
+            .then()
+            .statusCode(400)
+            .body("success", equalTo(false))
+            .body("data", nullValue())
+            .body("error.code", equalTo("400"))
+            .body("error.message", equalTo("입력 조건을 위반하였습니다."))
+            .body("error.validations.size()", equalTo(1))
+            .body("error.validations.field", everyItem(is("title")))
+            .body("error.validations.message", everyItem(is("크기가 1에서 100 사이여야 합니다")))
+            .body("error.validations.value", everyItem(is("T".repeat(101))))
+            .log().all();
     }
 
     private Header getAuthHeader(Long memberId) {
