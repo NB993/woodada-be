@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class WriteDiaryRequest {
+public class DiaryWriteRequest {
 
     @NotBlank
     @Size(min = 1, max = 100)

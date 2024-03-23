@@ -13,7 +13,7 @@ import com.woodada.common.auth.domain.Deleted;
 import com.woodada.common.auth.domain.JwtHandler;
 import com.woodada.common.auth.domain.Token;
 import com.woodada.common.auth.domain.UserRole;
-import com.woodada.core.diary.adapter.in.request.WriteDiaryRequest;
+import com.woodada.core.diary.adapter.in.request.DiaryWriteRequest;
 import com.woodada.core.diary.adapter.out.persistence.DiaryRepository;
 import com.woodada.test_helper.AcceptanceTestBase;
 import io.restassured.http.ContentType;
@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 
 @DisplayName("[acceptance test] 다이어리 작성 인수 테스트")
-class WriteDiaryAcceptanceTest extends AcceptanceTestBase {
+class DiaryWriteAcceptanceTest extends AcceptanceTestBase {
 
     @Autowired private JwtHandler jwtHandler;
     @Autowired private MemberRepository memberRepository;
@@ -44,7 +44,7 @@ class WriteDiaryAcceptanceTest extends AcceptanceTestBase {
                     "title": "유효한 일기 제목",
                     "contents": "유효한 일기 본문"
                 }
-                """, WriteDiaryRequest.class))
+                """, DiaryWriteRequest.class))
 
             .when()
             .post("/api/v1/diary")

@@ -2,7 +2,7 @@ package com.woodada.core.diary.application.port.out;
 
 import com.woodada.core.diary.domain.Diary;
 
-public interface SaveDiaryPort {
+public interface DiarySavePort {
 
     /**
      * 일기를 신규 저장한다.

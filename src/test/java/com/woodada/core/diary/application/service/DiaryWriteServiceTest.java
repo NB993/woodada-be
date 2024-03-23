@@ -11,9 +11,9 @@ import com.woodada.common.auth.argument_resolver.MemberHelper;
 import com.woodada.common.auth.argument_resolver.WddMember;
 import com.woodada.common.auth.domain.UserRole;
 import com.woodada.common.exception.WddException;
-import com.woodada.core.diary.application.port.in.WriteDiaryCommand;
-import com.woodada.core.diary.application.port.out.FindDiaryPort;
-import com.woodada.core.diary.application.port.out.SaveDiaryPort;
+import com.woodada.core.diary.application.port.in.DiaryWriteCommand;
+import com.woodada.core.diary.application.port.out.DiaryFindPort;
+import com.woodada.core.diary.application.port.out.DiarySavePort;
 import com.woodada.core.diary.domain.Diary;
 import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,16 +25,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("[unit test] WriteDiaryUseCase 단위테스트")
-class WriteDiaryServiceTest {
+class DiaryWriteServiceTest {
 
-    @Mock private FindDiaryPort findDiaryPort;
-    @Mock private SaveDiaryPort saveDiaryPort;
+    @Mock private DiaryFindPort findDiaryPort;
+    @Mock private DiarySavePort saveDiaryPort;
 
-    private WriteDiaryService writeDiaryService;
+    private DiaryWriteService writeDiaryService;
 
     @BeforeEach
     void setUp() {
-        writeDiaryService = new WriteDiaryService(findDiaryPort, saveDiaryPort);
+        writeDiaryService = new DiaryWriteService(findDiaryPort, saveDiaryPort);
     }
 
     @DisplayName("유효한 글 작성 모델을 전달받으면 작성에 성공한다.")
@@ -42,7 +42,7 @@ class WriteDiaryServiceTest {
     void given_valid_command_then_diary_is_wrote() {
         //given
         WddMember wddMember = getWddMember(1L);
-        WriteDiaryCommand writeDiaryCommand = new WriteDiaryCommand("100자 이하의 제목", "5000자 이하의 본문", LocalDate.now());
+        DiaryWriteCommand writeDiaryCommand = new DiaryWriteCommand("100자 이하의 제목", "5000자 이하의 본문", LocalDate.now());
         given(saveDiaryPort.saveDiary(any(Diary.class)))
             .willReturn(Diary.withId(1L, "100자 이하의 제목", "5000자 이하의 본문"));
 
@@ -60,7 +60,7 @@ class WriteDiaryServiceTest {
         //given
         WddMember wddMember = getWddMember(1L);
         LocalDate dateAlreadyWroteDiary = LocalDate.of(2024, 3, 24);
-        WriteDiaryCommand writeDiaryCommand = new WriteDiaryCommand("100자 이하의 제목", "5000자 이하의 본문", dateAlreadyWroteDiary);
+        DiaryWriteCommand writeDiaryCommand = new DiaryWriteCommand("100자 이하의 제목", "5000자 이하의 본문", dateAlreadyWroteDiary);
 
         given(findDiaryPort.existsDiary(wddMember.getId(), dateAlreadyWroteDiary))
             .willThrow(WddException.class);

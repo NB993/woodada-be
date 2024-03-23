@@ -1,14 +1,14 @@
 package com.woodada.core.diary.adapter.out.persistence;
 
-import com.woodada.core.diary.application.port.out.FindDiaryPort;
-import com.woodada.core.diary.application.port.out.SaveDiaryPort;
+import com.woodada.core.diary.application.port.out.DiaryFindPort;
+import com.woodada.core.diary.application.port.out.DiarySavePort;
 import com.woodada.core.diary.domain.Diary;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DiaryPersistenceAdapter implements FindDiaryPort, SaveDiaryPort {
+public class DiaryPersistenceAdapter implements DiaryFindPort, DiarySavePort {
 
     private final DiaryRepository diaryRepository;
 

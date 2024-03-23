@@ -1,11 +1,9 @@
 package com.woodada.core.diary.application.port.in;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.DisplayName;
 
 @DisplayName("[unit test] 일기 작성 command 객체 단위 테스트")
-class WriteDiaryCommandTest {
+class DiaryWriteCommandTest {
 
     /*
     todo
