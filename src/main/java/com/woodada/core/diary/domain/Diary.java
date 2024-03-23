@@ -1,5 +1,8 @@
 package com.woodada.core.diary.domain;
 
+import lombok.Getter;
+
+@Getter
 public class Diary {
 
     private final Long id;

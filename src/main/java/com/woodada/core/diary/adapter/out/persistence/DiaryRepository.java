@@ -1,9 +1,9 @@
 package com.woodada.core.diary.adapter.out.persistence;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DiaryRepository extends JpaRepository<DiaryJpaEntity, Long> {
 
-    Optional<DiaryJpaEntity> findByCreatedBy(Long memberId);
+    boolean existsByCreatedByAndCreatedAtBetween(Long memberId, LocalDateTime startOfDate, LocalDateTime endOfDate);
 }
