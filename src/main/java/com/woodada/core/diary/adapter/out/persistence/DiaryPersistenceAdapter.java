@@ -4,6 +4,7 @@ import com.woodada.core.diary.application.port.out.FindDiaryPort;
 import com.woodada.core.diary.application.port.out.SaveDiaryPort;
 import com.woodada.core.diary.domain.Diary;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,8 +17,8 @@ public class DiaryPersistenceAdapter implements FindDiaryPort, SaveDiaryPort {
     }
 
     @Override
-    public boolean exists(final Long createdBy, final LocalDate writeDate) {
-        return false;
+    public boolean existsDiary(final Long createdBy, final LocalDate writeDate) {
+        return diaryRepository.existsByCreatedByAndCreatedAtBetween(createdBy, writeDate.atStartOfDay(), writeDate.atTime(LocalTime.MAX));
     }
 
     @Override
