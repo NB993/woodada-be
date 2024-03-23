@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DiaryRepository extends JpaRepository<DiaryJpaEntity, Long> {
 
-    boolean existsByCreatedByAndCreatedAtBetween(Long memberId, LocalDateTime startOfDate, LocalDateTime endOfDate);
+    boolean existsByCreatedByAndCreatedAtBetween(Long createdBy, LocalDateTime startOfDate, LocalDateTime endOfDate);
 }

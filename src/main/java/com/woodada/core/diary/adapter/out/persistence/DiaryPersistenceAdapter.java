@@ -16,7 +16,7 @@ public class DiaryPersistenceAdapter implements FindDiaryPort, SaveDiaryPort {
     }
 
     @Override
-    public boolean existsDiaryByCreatedByAndWriteDate(Long createdBy, LocalDate writeDate) {
+    public boolean exists(final Long createdBy, final LocalDate writeDate) {
         return false;
     }
 

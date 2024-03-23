@@ -62,7 +62,7 @@ class WriteDiaryServiceTest {
         LocalDate dateAlreadyWroteDiary = LocalDate.of(2024, 3, 24);
         WriteDiaryCommand writeDiaryCommand = new WriteDiaryCommand("100자 이하의 제목", "5000자 이하의 본문", dateAlreadyWroteDiary);
 
-        given(findDiaryPort.existsDiaryByCreatedByAndWriteDate(wddMember.getId(), dateAlreadyWroteDiary))
+        given(findDiaryPort.existsDiary(wddMember.getId(), dateAlreadyWroteDiary))
             .willThrow(WddException.class);
 
         //when then

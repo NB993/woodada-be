@@ -23,7 +23,7 @@ public class WriteDiaryService implements WriteDiaryUseCase {
 
     @Override
     public Diary writeDiary(final WddMember wddMember, final WriteDiaryCommand command) {
-        boolean diaryExists = findDiaryPort.existsDiaryByCreatedByAndWriteDate(wddMember.getId(), command.writeDate());
+        boolean diaryExists = findDiaryPort.existsDiary(wddMember.getId(), command.writeDate());
         if (diaryExists) {
             throw new WddException(DiaryException.DUPLICATED_WRITE_DATE);
         }
