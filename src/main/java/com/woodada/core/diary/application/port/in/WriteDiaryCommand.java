@@ -1,10 +1,10 @@
 package com.woodada.core.diary.application.port.in;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record WriteDiaryCommand(
     String title,
     String contents,
-    LocalDateTime writeDateTime
+    LocalDate writeDate
 ) {
 }
