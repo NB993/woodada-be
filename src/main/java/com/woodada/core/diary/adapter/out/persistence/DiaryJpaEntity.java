@@ -19,9 +19,9 @@ public class DiaryJpaEntity extends ModifierBaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    @Column(name = "title", nullable = false, length = 100)
+    private String title;
 
-    @Column(name = "contents", nullable = false)
+    @Column(name = "contents", nullable = false, length = 5000)
     private String contents;
 }

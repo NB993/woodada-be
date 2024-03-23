@@ -33,7 +33,7 @@ class WriteDiaryAcceptanceTest extends AcceptanceTestBase {
     @Autowired private MemberRepository memberRepository;
     @Autowired private DiaryRepository diaryRepository;
 
-    @DisplayName("인증된 멤버가 유효한 일기 본문을 입력 후 저장을 요청하면 저장에 성공한다.")
+    @DisplayName("인증된 멤버가 유효한 일기 제목, 본문을 입력 후 저장을 요청하면 저장에 성공한다.")
     @Test
     void when_valid_content_then_diary_saved() throws JsonProcessingException {
         saveMember(1L);
@@ -43,6 +43,7 @@ class WriteDiaryAcceptanceTest extends AcceptanceTestBase {
             .header(getAuthHeader(1L))
             .body(objectMapper.readValue("""
                 {
+                    "title": "유효한 일기 제목",
                     "contents": "유효한 일기 본문"
                 }
                 """, WriteDiaryRequest.class))
