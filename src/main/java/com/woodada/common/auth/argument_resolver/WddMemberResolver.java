@@ -4,10 +4,12 @@ import com.woodada.common.auth.adapter.out.persistence.MemberJpaEntity;
 import com.woodada.common.auth.adapter.out.persistence.MemberRepository;
 import com.woodada.common.auth.domain.Deleted;
 import com.woodada.common.auth.exception.AuthenticationException;
+import com.woodada.common.config.jpa.AuditorAwareImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -19,9 +21,11 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class WddMemberResolver implements HandlerMethodArgumentResolver {
 
     private final MemberRepository memberRepository;
+    private final AuditorAwareImpl auditorAware;
 
-    public WddMemberResolver(final MemberRepository memberRepository) {
+    public WddMemberResolver(final MemberRepository memberRepository, final AuditorAware auditorAware) {
         this.memberRepository = memberRepository;
+        this.auditorAware = (AuditorAwareImpl) auditorAware;
     }
 
     @Override
@@ -44,6 +48,10 @@ public class WddMemberResolver implements HandlerMethodArgumentResolver {
         }
 
         final MemberJpaEntity authMember = optionalMember.get();
+
+        //todo 다이어리 crud 끝나고 시큐리티 적용한 후에 제거..
+        auditorAware.setCurrentAuditor(authMember.getId());
+
         return new WddMember(
             authMember.getId(),
             authMember.getEmail(),
