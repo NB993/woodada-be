@@ -59,7 +59,7 @@ class DiaryModifyAcceptanceTest extends AcceptanceTestBase {
                 """, DiaryModifyRequest.class))
 
             .when()
-            .put("/api/v1/diary")
+            .put("/api/v1/diaries")
 
             .then()
             .statusCode(200)
@@ -93,7 +93,7 @@ class DiaryModifyAcceptanceTest extends AcceptanceTestBase {
             .body(objectMapper.readValue(titleOver100, DiaryModifyRequest.class))
 
             .when()
-            .post("/api/v1/diary")
+            .post("/api/v1/diaries")
 
             .then()
             .statusCode(400)
@@ -127,7 +127,7 @@ class DiaryModifyAcceptanceTest extends AcceptanceTestBase {
             .body(objectMapper.readValue(titleOver100, DiaryModifyRequest.class))
 
             .when()
-            .put("/api/v1/diary")
+            .put("/api/v1/diaries")
 
             .then()
             .statusCode(400)
