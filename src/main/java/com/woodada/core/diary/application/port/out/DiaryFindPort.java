@@ -2,6 +2,7 @@ package com.woodada.core.diary.application.port.out;
 
 import com.woodada.core.diary.domain.Diary;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 public interface DiaryFindPort {
@@ -23,4 +24,14 @@ public interface DiaryFindPort {
      * @return 일기
      */
     Optional<Diary> findDiary(Long id, Long createdBy);
+
+    /**
+     * 일기 목록을 조회한다.
+     *
+     * @param createdBy 작성자 id
+     * @param startDate 조회 시작 일자
+     * @param endDate 조회 종료 일자
+     * @return 일기 목록
+     */
+    List<Diary> findAll(Long createdBy, LocalDate startDate, LocalDate endDate);
 }
