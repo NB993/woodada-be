@@ -48,6 +48,6 @@ public class DiaryJpaEntity extends ModifierBaseEntity {
      * @return 일기 도메인 엔티티
      */
     public Diary toDomainEntity() {
-        return Diary.withId(this.id, this.title, this.contents);
+        return Diary.withId(id, title, contents, getCreatedBy(), getCreatedAt(), getModifiedBy(), getModifiedAt());
     }
 }
