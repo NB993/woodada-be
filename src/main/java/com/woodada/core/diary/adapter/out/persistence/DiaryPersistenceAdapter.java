@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
@@ -38,6 +39,10 @@ public class DiaryPersistenceAdapter implements DiaryFindPort, DiarySavePort {
 
     @Override
     public List<Diary> findAll(final Long createdBy, final LocalDate startDate, final LocalDate endDate) {
+        Objects.requireNonNull(createdBy);
+        Objects.requireNonNull(startDate);
+        Objects.requireNonNull(endDate);
+
         final LocalDateTime startDateTime = startDate.atStartOfDay();
         final LocalDateTime endDateTime = endDate.atTime(LocalDateTime.MAX.toLocalTime());
 
