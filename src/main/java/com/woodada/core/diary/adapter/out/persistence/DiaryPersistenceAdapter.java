@@ -23,11 +23,17 @@ public class DiaryPersistenceAdapter implements DiaryFindPort, DiarySavePort {
 
     @Override
     public boolean existsDiary(final Long createdBy, final LocalDate writeDate) {
+        Objects.requireNonNull(createdBy);
+        Objects.requireNonNull(writeDate);
+
         return diaryRepository.existsByCreatedByAndCreatedAtBetween(createdBy, writeDate.atStartOfDay(), writeDate.atTime(LocalTime.MAX));
     }
 
     @Override
     public Optional<Diary> findDiary(final Long id, final Long createdBy) {
+        Objects.requireNonNull(id);
+        Objects.requireNonNull(createdBy);
+
         final Optional<DiaryJpaEntity> optionalDiary = diaryRepository.findByIdAndCreatedBy(id, createdBy);
         if (optionalDiary.isEmpty()) {
             return Optional.empty();

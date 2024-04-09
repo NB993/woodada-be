@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,9 +37,12 @@ public class DiaryJpaEntity extends ModifierBaseEntity {
      * DomainEntity to JpaEntity 매핑
      *
      * @param diary 일기 도메인 엔티티
+     * @throws NullPointerException diary에 null이 입력된 경우
      * @return 일기 JPA 엔티티
      */
     public static DiaryJpaEntity from(final Diary diary) {
+        Objects.requireNonNull(diary);
+
         return new DiaryJpaEntity(diary.getId(), diary.getTitle(), diary.getContents());
     }
 
