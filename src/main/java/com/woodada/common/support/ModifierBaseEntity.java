@@ -21,4 +21,13 @@ public abstract class ModifierBaseEntity extends CreatorBaseEntity {
     @LastModifiedDate
     @Column(name = "modified_at")
     private LocalDateTime modifiedAt;
+
+    public ModifierBaseEntity() {
+    }
+
+    public ModifierBaseEntity(final Long createdBy, final LocalDateTime createdAt, final Long modifiedBy, final LocalDateTime modifiedAt) {
+        super(createdBy, createdAt);
+        this.modifiedBy = modifiedBy;
+        this.modifiedAt = modifiedAt;
+    }
 }

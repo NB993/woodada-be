@@ -1,5 +1,6 @@
 package com.woodada.core.diary.domain;
 
+import com.woodada.support.Deleted;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import org.springframework.util.ObjectUtils;
@@ -10,6 +11,7 @@ public class Diary {
     private final Long id;
     private String title;
     private String contents;
+    private Deleted deleted;
     private Long createdBy;
     private LocalDateTime createdAt;
     private Long modifiedBy;
@@ -19,6 +21,7 @@ public class Diary {
         final Long id,
         final String title,
         final String contents,
+        final Deleted deleted,
         final Long createdBy,
         final LocalDateTime createdAt,
         final Long modifiedBy,
@@ -27,6 +30,7 @@ public class Diary {
         this.id = id;
         this.title = title;
         this.contents = contents;
+        this.deleted = deleted;
         this.createdBy = createdBy;
         this.createdAt = createdAt;
         this.modifiedBy = modifiedBy;
@@ -50,7 +54,7 @@ public class Diary {
             throw new IllegalArgumentException("일기 본문을 한 글자 이상 입력해 주세요.");
         }
 
-        return new Diary(null, title, contents, null, null, null, null);
+        return new Diary(null, title, contents,  Deleted.FALSE, null, null, null, null);
     }
 
     /**
@@ -59,6 +63,7 @@ public class Diary {
      * @param id       diary id
      * @param title    제목
      * @param contents 본문
+     * @param deleted 삭제 여부
      * @param createdBy 등록자
      * @param createdAt 등록 일시
      * @param modifiedBy 최종 수정자
@@ -69,12 +74,13 @@ public class Diary {
         final Long id,
         final String title,
         final String contents,
+        final Deleted deleted,
         final Long createdBy,
         final LocalDateTime createdAt,
         final Long modifiedBy,
         final LocalDateTime modifiedAt
     ) {
-        return new Diary(id, title, contents, createdBy, createdAt, modifiedBy, modifiedAt);
+        return new Diary(id, title, contents, deleted, createdBy, createdAt, modifiedBy, modifiedAt);
     }
 
     /**
@@ -95,5 +101,9 @@ public class Diary {
 
         this.title = title;
         this.contents = contents;
+    }
+
+    public void delete() {
+        this.deleted = Deleted.TRUE;
     }
 }
