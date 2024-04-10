@@ -60,6 +60,8 @@ public class DiaryPersistenceAdapter implements DiaryFindPort, DiarySavePort {
 
     @Override
     public Diary saveDiary(final Diary diary) {
+        Objects.requireNonNull(diary);
+
         final DiaryJpaEntity diaryJpaEntity = DiaryJpaEntity.from(diary);
         final DiaryJpaEntity savedDiary = diaryRepository.save(diaryJpaEntity);
 
