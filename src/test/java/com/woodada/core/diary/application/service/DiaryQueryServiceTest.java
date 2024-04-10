@@ -10,6 +10,7 @@ import com.woodada.common.auth.domain.UserRole;
 import com.woodada.core.diary.application.port.in.DiaryQueryCommand;
 import com.woodada.core.diary.application.port.out.DiaryFindPort;
 import com.woodada.core.diary.domain.Diary;
+import com.woodada.support.Deleted;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -60,7 +61,7 @@ public class DiaryQueryServiceTest {
         WddMember wddMember = getWddMember(1L);
         DiaryQueryCommand command = new DiaryQueryCommand(LocalDate.now(), LocalDate.now().plusDays(30));
         given(findDiaryPort.findAll(wddMember.getId(), command.startDate(), command.endDate()))
-            .willReturn(List.of(Diary.withId(1L, "제목", "본문", 1L, LocalDateTime.now(), 1L, LocalDateTime.now())));
+            .willReturn(List.of(Diary.withId(1L, "제목", "본문", Deleted.FALSE, 1L, LocalDateTime.now(), 1L, LocalDateTime.now())));
 
         //when
         List<Diary> diaries = diaryQueryService.queryDiaries(wddMember, command);
@@ -92,7 +93,7 @@ public class DiaryQueryServiceTest {
         //given
         WddMember wddMember = getWddMember(1L);
         given(findDiaryPort.findDiary(1L, 1L))
-            .willReturn(Optional.of(Diary.withId(1L, "제목", "본문", 1L, LocalDateTime.now(), 1L, LocalDateTime.now())));
+            .willReturn(Optional.of(Diary.withId(1L, "제목", "본문", Deleted.FALSE, 1L, LocalDateTime.now(), 1L, LocalDateTime.now())));
 
         //when
         Diary diary = diaryQueryService.queryDiary(wddMember, 1L);
