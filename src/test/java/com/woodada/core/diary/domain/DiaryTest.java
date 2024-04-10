@@ -1,8 +1,10 @@
 package com.woodada.core.diary.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import com.woodada.support.Deleted;
 import java.time.LocalDateTime;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,7 +19,7 @@ public class DiaryTest {
     void given_title_length_less_than_1_when_modify_then_throw_exception(String title) {
         Diary diary = Diary.withId(1L, "수정 전 제목", "수정 전 본문", Deleted.FALSE, 1L, LocalDateTime.now(), 1L, LocalDateTime.now());
 
-        Assertions.assertThatThrownBy(() -> diary.modify(title, "수정 후 본문"))
+        assertThatThrownBy(() -> diary.modify(title, "수정 후 본문"))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("수정할 제목을 한 글자 이상 입력해 주세요.");
     }
@@ -28,7 +30,7 @@ public class DiaryTest {
     void given_contents_length_less_than_1_when_modify_then_throw_exception(String contents) {
         Diary diary = Diary.withId(1L, "수정 전 제목", "수정 전 본문", Deleted.FALSE, 1L, LocalDateTime.now(), 1L, LocalDateTime.now());
 
-        Assertions.assertThatThrownBy(() -> diary.modify("수정 후 제목", contents))
+        assertThatThrownBy(() -> diary.modify("수정 후 제목", contents))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("수정할 본문을 한 글자 이상 입력해 주세요.");
     }
@@ -40,7 +42,16 @@ public class DiaryTest {
 
         diary.modify("제목", "본문");
 
-        Assertions.assertThat(diary.getTitle()).isEqualTo("제목");
-        Assertions.assertThat(diary.getContents()).isEqualTo("본문");
+        assertThat(diary.getTitle()).isEqualTo("제목");
+        assertThat(diary.getContents()).isEqualTo("본문");
+    }
+
+    @DisplayName("삭제를 요청하면 삭제 여부 필드가 TRUE가 된다.")
+    @Test
+    void when_delete_then_deleted_changed_to_true() {
+        Diary diary = Diary.withId(1L, "제목", "본문", Deleted.FALSE, 1L, LocalDateTime.now(), 1L, LocalDateTime.now());
+        diary.delete();
+
+        assertThat(diary.getDeleted()).isEqualTo(Deleted.TRUE);
     }
 }
