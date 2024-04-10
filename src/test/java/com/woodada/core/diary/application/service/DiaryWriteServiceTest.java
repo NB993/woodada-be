@@ -16,6 +16,7 @@ import com.woodada.core.diary.application.port.out.DiaryFindPort;
 import com.woodada.core.diary.application.port.out.DiarySavePort;
 import com.woodada.core.diary.domain.Diary;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -44,7 +45,7 @@ class DiaryWriteServiceTest {
         WddMember wddMember = getWddMember(1L);
         DiaryWriteCommand writeDiaryCommand = new DiaryWriteCommand("100자 이하의 제목", "5000자 이하의 본문", LocalDate.now());
         given(saveDiaryPort.saveDiary(any(Diary.class)))
-            .willReturn(Diary.withId(1L, "100자 이하의 제목", "5000자 이하의 본문"));
+            .willReturn(Diary.withId(1L, "100자 이하의 제목", "5000자 이하의 본문", 1L, LocalDateTime.now(), 1L, LocalDateTime.now()));
 
         //when
         Diary savedDiary = writeDiaryService.writeDiary(wddMember, writeDiaryCommand);
