@@ -10,6 +10,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -34,7 +35,17 @@ public class DiaryJpaEntity extends ModifierBaseEntity {
     @Column(name = "deleted", nullable = false, length = 5)
     private Deleted deleted;
 
-    private DiaryJpaEntity(final Long id, final String title, final String contents, final Deleted deleted) {
+    private DiaryJpaEntity(
+        final Long id,
+        final String title,
+        final String contents,
+        final Deleted deleted,
+        final Long createdBy,
+        final LocalDateTime createdAt,
+        final Long modifiedBy,
+        final LocalDateTime modifiedAt
+    ) {
+        super(createdBy, createdAt, modifiedBy, modifiedAt);
         this.id = id;
         this.title = title;
         this.contents = contents;
@@ -51,7 +62,8 @@ public class DiaryJpaEntity extends ModifierBaseEntity {
     public static DiaryJpaEntity from(final Diary diary) {
         Objects.requireNonNull(diary);
 
-        return new DiaryJpaEntity(diary.getId(), diary.getTitle(), diary.getContents(), Deleted.FALSE);
+        return new DiaryJpaEntity(diary.getId(), diary.getTitle(), diary.getContents(), diary.getDeleted(),
+            diary.getCreatedBy(), diary.getCreatedAt(), diary.getModifiedBy(), diary.getModifiedAt());
     }
 
     /**
@@ -60,6 +72,6 @@ public class DiaryJpaEntity extends ModifierBaseEntity {
      * @return 일기 도메인 엔티티
      */
     public Diary toDomainEntity() {
-        return Diary.withId(id, title, contents, Deleted.FALSE, getCreatedBy(), getCreatedAt(), getModifiedBy(), getModifiedAt());
+        return Diary.withId(id, title, contents, deleted, getCreatedBy(), getCreatedAt(), getModifiedBy(), getModifiedAt());
     }
 }

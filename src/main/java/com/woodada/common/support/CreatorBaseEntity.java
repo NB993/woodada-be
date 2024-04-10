@@ -21,4 +21,12 @@ public abstract class CreatorBaseEntity {
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;
+
+    public CreatorBaseEntity() {
+    }
+
+    public CreatorBaseEntity(final Long createdBy, final LocalDateTime createdAt) {
+        this.createdBy = createdBy;
+        this.createdAt = createdAt;
+    }
 }
