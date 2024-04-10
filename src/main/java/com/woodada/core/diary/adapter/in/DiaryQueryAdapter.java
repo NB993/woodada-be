@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +40,15 @@ public class DiaryQueryAdapter {
             .collect(Collectors.toList());
 
         final ApiResponse<List<DiaryQueryResponse>> apiResponse = ApiResponse.success(response);
+        return ResponseEntity.ok(apiResponse);
+    }
+
+    @GetMapping("/{id}")
+    ResponseEntity<ApiResponse<DiaryQueryResponse>> queryDiary(WddMember wddMember, @PathVariable Long id) {
+        final Diary diary = diaryQueryUseCase.queryDiary(wddMember, id);
+        final DiaryQueryResponse response = DiaryQueryResponse.from(diary);
+        final ApiResponse<DiaryQueryResponse> apiResponse = ApiResponse.success(response);
+
         return ResponseEntity.ok(apiResponse);
     }
 }

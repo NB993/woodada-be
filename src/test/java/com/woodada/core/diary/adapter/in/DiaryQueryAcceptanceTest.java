@@ -8,7 +8,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.woodada.common.auth.adapter.out.persistence.MemberJpaEntity;
 import com.woodada.common.auth.adapter.out.persistence.MemberRepository;
 import com.woodada.common.auth.argument_resolver.MemberHelper;
@@ -42,7 +41,7 @@ class DiaryQueryAcceptanceTest extends AcceptanceTestBase {
 
     @DisplayName("인증된 멤버가 유효한 조회 시작 일자, 조회 종료 일자를 입력 후 조회를 요청하면 일기 목록 조회에 성공한다.")
     @Test
-    void when_member_is_authned_and_all_parameters_are_valid_then_query_success() throws JsonProcessingException {
+    void when_member_is_authned_and_all_parameters_are_valid_then_query_diaries_success() {
         //given
         saveMember(1L);
         ((AuditorAwareImpl) auditorAware).setCurrentAuditor(1L); // todo 다이어리 CRUD 끝나고 제거..
@@ -67,6 +66,34 @@ class DiaryQueryAcceptanceTest extends AcceptanceTestBase {
             .body("data.contents", everyItem(is("본문")))
             .body("data.createdAt", everyItem(notNullValue(LocalDateTime.class)))
             .body("data.modifiedAt", everyItem(notNullValue(LocalDateTime.class)))
+            .body("error", nullValue())
+            .log().all();
+    }
+
+    @DisplayName("인증된 멤버가 유효한 일기 id를 입력 후 조회를 요청하면 일기 단건 조회에 성공한다.")
+    @Test
+    void when_member_is_authned_and_id_is_valid_then_query_diary_success() {
+        //given
+        saveMember(1L);
+        ((AuditorAwareImpl) auditorAware).setCurrentAuditor(1L); // todo 다이어리 CRUD 끝나고 제거..
+        saveDiary("제목", "본문");
+
+        given()
+            .contentType(ContentType.JSON)
+            .header(getAuthHeader(1L))
+            .pathParam("id", 1L)
+
+        .when()
+            .get("/api/v1/diaries/{id}")
+
+        .then()
+            .statusCode(200)
+            .body("success", equalTo(true))
+            .body("data.id", equalTo(1))
+            .body("data.title", equalTo("제목"))
+            .body("data.contents", equalTo("본문"))
+            .body("data.createdAt", notNullValue(LocalDateTime.class))
+            .body("data.modifiedAt", notNullValue(LocalDateTime.class))
             .body("error", nullValue())
             .log().all();
     }
