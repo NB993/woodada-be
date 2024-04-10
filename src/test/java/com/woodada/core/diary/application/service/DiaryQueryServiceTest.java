@@ -34,27 +34,27 @@ public class DiaryQueryServiceTest {
         diaryQueryService = new DiaryQueryService(findDiaryPort);
     }
 
-    @DisplayName("wddMember 인자가 null이면 예외가 발생한다.")
+    @DisplayName("[queryDiaries] - wddMember 인자가 null이면 예외가 발생한다.")
     @Test
-    void given_wddMember_is_null_then_throw_exception() {
+    void given_wdd_member_is_null_when_query_diaries_then_throw_exception() {
         DiaryQueryCommand command = new DiaryQueryCommand(LocalDate.now(), LocalDate.now().plusDays(30));
 
         assertThatThrownBy(() -> diaryQueryService.queryDiaries(null, command))
             .isInstanceOf(NullPointerException.class);
     }
 
-    @DisplayName("command 인자가 null이면 예외가 발생한다.")
+    @DisplayName("[queryDiaries] - command가 null인 경우 예외가 발생한다.")
     @Test
-    void given_command_is_null_then_throw_exception() {
+    void given_command_is_null_when_query_diaries__then_throw_exception() {
         WddMember wddMember = getWddMember(1L);
 
         assertThatThrownBy(() -> diaryQueryService.queryDiaries(wddMember, null))
             .isInstanceOf(NullPointerException.class);
     }
 
-    @DisplayName("유효한 일기 조회 객체를 전달받으면 조회에 성공한다.")
+    @DisplayName("[queryDiaries] - 모든 인자가 유효한 경우 일기 목록 조회에 성공한다.")
     @Test
-    void given_valid_command_then_diary_is_wrote() {
+    void given_all_args_are_not_null_when_query_diaries_then_query_success() {
         //given
         WddMember wddMember = getWddMember(1L);
         DiaryQueryCommand command = new DiaryQueryCommand(LocalDate.now(), LocalDate.now().plusDays(30));
@@ -68,6 +68,7 @@ public class DiaryQueryServiceTest {
         assertThat(diaries.size()).isEqualTo(1);
         assertThat(diaries.get(0).getId()).isEqualTo(1L);
     }
+
     private WddMember getWddMember(Long memberId) {
         WddMember writer = MemberHelper.createWddMember(memberId, "test@email.com", "테스트유저", "test_protile_url", UserRole.NORMAL);
         return writer;
